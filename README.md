@@ -34,7 +34,7 @@ var migrationLayer = L.migrationLayer({
 migrationLayer.setData([{}])
 ```
 
-![alt text](./example.jpg)
+![alt text](./src/example.jpg)
 
 
 ## Envirenment
