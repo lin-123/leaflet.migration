@@ -22,7 +22,7 @@ class Spark extends Arc {
     this.trailAngle = this.startAngle;
     this.arcAngle = this.startAngle;
     // 是否有阴影
-    this.animateBlur = true;
+    // this.animateBlur = true;
     this.marker = new Marker({
       x: 50,
       y: 80,

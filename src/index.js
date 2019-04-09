@@ -169,14 +169,12 @@ L.MigrationLayer = L.Class.extend({
   },
   destroy() {
     this.migration.clear();
-    // 移除dom
     this.container.parentNode.removeChild(this.container);
-    // 移除事件监听
     this._map.clearAllEventListeners();
     this.mapHandles = [];
   }
 
 });
 L.migrationLayer = function (options) {
-  return new L.MigrationLayer(options)
-}
+  return new L.MigrationLayer(options);
+};
