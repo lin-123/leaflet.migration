@@ -1,18 +1,15 @@
 {
   "name": "leaflet.migration",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
     "start": "webpack-dev-server --inline --progress --config ./webpack.config.js",
     "build": "NODE_ENV=production webpack",
-    "test": "mocha -r babel-core/register --recursive ./test",
-    "coverage": "nyc --check-coverage --functions 100 --branches 90 --lines 90 npm test",
     "lint": "eslint ."
   },
   "pre-push": [
-    "lint",
-    "coverage"
+    "lint"
   ],
   "author": "linkaka",
   "license": "ISC",
@@ -33,20 +30,17 @@
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
     "html-webpack-plugin": "^3.2.0",
-    "intelli-espower-loader": "^1.0.1",
-    "mocha": "^4.0.1",
-    "nyc": "^13.1.0",
-    "power-assert": "^1.6.1",
     "pre-push": "^0.1.1",
-    "sinon": "^4.1.0",
     "uglifyjs-webpack-plugin": "^2.1.2",
     "webpack": "^4.26.1",
     "webpack-bundle-analyzer": "^3.0.3",
-    "webpack-cli": "^3.1.2",
+    "webpack-cli": "^3.3.0",
     "webpack-dev-server": "^3.2.1"
   },
   "keywords": [
-    "leaflet", "flyingline", "migration line"
+    "leaflet",
+    "flyingline",
+    "migration line"
   ],
   "babel": {
     "presets": [

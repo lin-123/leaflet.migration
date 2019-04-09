@@ -3,6 +3,8 @@ import { FACTOR } from './config';
 // color:rgb或rgba格式
 // opacity: 透明度
 export function calculateColor(color, opacity) {
+  if (!color) return;
+
   if (color.indexOf('#') === 0) {
     const color16 = color.slice(1);
     const r = parseInt(color16.slice(0, 2), 16);

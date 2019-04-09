@@ -44,6 +44,7 @@ migrationLayer.setData([{}])
 ### 1.1.0
 - [ ] layer.setStyle
 - [ ] separate styles and data
+- [ ] update return value of new MigrationLayer()
 
 ### 1.0.0
 - [x] add webpack

@@ -144,6 +144,7 @@ L.MigrationLayer = L.Class.extend({
       this.migration.updateData(data);
       this.migration.start(this.canvas);
     }
+    return this;
   },
   setData(data) {
     this._data = data;
