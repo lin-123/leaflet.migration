@@ -14,12 +14,12 @@
     "lint",
     "coverage"
   ],
-  "author": "uc-weber",
+  "author": "linkaka",
   "license": "ISC",
   "dependencies": {},
   "repository": {
     "type": "git",
-    "url": "http://git.jd.com/web-uc-weapons/uc-fun.git"
+    "url": "https://github.com/lin-123/leaflet.migration"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -46,7 +46,7 @@
     "webpack-dev-server": "^3.2.1"
   },
   "keywords": [
-    "functions"
+    "leaflet", "flyingline", "migration line"
   ],
   "babel": {
     "presets": [
