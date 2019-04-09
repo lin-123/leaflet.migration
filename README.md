@@ -34,6 +34,9 @@ var migrationLayer = L.migrationLayer({
 migrationLayer.setData([{}])
 ```
 
+![alt text](./example.jpg)
+
+
 ## Envirenment
 - node `v10.8.0`
 
