@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Migration Layer</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css">
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+        }
+
+        #event {
+            position: absolute;
+            top: 50px;
+            right: 600px;
+            height: 100px;
+            width: 400px;
+            z-index: 10000;
+        }
+
+        .btn {
+            border-color: gray;
+            border-width: 2px;
+            background-color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+    <script type="text/javascript" src="./index.js"></script>
+    <script>
+        var lrmap = L.map('map').setView([35.4199, 95.2402], 5);
+        L.tileLayer('http://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}', {
+            subdomains: ["1", "2", "3", "4"]
+        }).addTo(lrmap);
+        var red = '#ff0000'
+        var green = '#00ff00'
+        var data = [{
+                labels: ['北京', '新疆'],
+                from: [116.404844, 39.91405],
+                to: [84.9023, 42.148],
+                color: red
+            },
+            {
+                labels: ['北京', '西藏'],
+                from: [116.404844, 39.91405],
+                to: [87.8695, 31.6846],
+                color: red
+            },
+            {
+                labels: ['北京', '内蒙古'],
+                from: [116.404844, 39.91405],
+                to: [112.5977, 41.3408],
+                color: green
+            },
+            {
+                labels: ['北京', '青海'],
+                from: [116.404844, 39.91405],
+                to: [95.2402, 35.4199],
+                color: red
+            },
+            {
+                labels: ['北京', '四川'],
+                from: [116.404844, 39.91405],
+                to: [101.9199, 30.1904],
+                color: red
+            },
+            {
+                labels: ['北京', '黑龙江'],
+                from: [116.404844, 39.91405],
+                to: [126.1445, 48.7156],
+                color: green
+            },
+        ];
+
+        data = data.map(item => {
+            return {
+                ...item,
+                value: parseInt(Math.random() * 100)
+            }
+        });
+        var migrationLayer = L.migrationLayer({
+            map: lrmap,
+            data: data,
+            style: {
+                pulse: {
+                    radius: 10,
+                    borderWidth: 3
+                },
+                arc: {
+                    width: 1,
+                    label: true,
+                }
+            },
+            maxWidth: 10
+        });
+        migrationLayer.addTo(lrmap);
+    </script>
+</body>
+
+</html>

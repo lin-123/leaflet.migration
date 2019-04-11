@@ -23,6 +23,7 @@ class Pulse {
       value,
       labels,
       r,
+      scale: 1
     });
     this.initDom();
   }
@@ -37,11 +38,14 @@ class Pulse {
   initDom() {
     if (domCache.length > 0) {
       this.pulse = domCache.pop();
+      [this.ring] = this.pulse.children;
     } else {
       this.pulse = document.createElement('div');
+      this.ring = document.createElement('div');
+      this.pulse.appendChild(this.ring);
     }
     const {
-      x, y, r, color, pulse
+      x, y, r, color, pulse, ring
     } = this;
     Object.assign(pulse.style, {
       position: 'absolute',
@@ -52,8 +56,18 @@ class Pulse {
       left: `-${r}px`,
       top: `-${r}px`,
       background: color,
-      boxShadow: `0 0 10px ${color}`,
+      // boxShadow: `0 0 10px ${color}`,
       transform: `translate(${x}px, ${y}px)`,
+    });
+
+    Object.assign(ring.style, {
+      position: 'absolute',
+      borderRadius: '50%',
+      width: `${2 * r}px`,
+      height: `${2 * r}px`,
+      left: `${-1}px`,
+      top: `${-1}px`,
+      border: `1px solid ${color}`
     });
     this.container.appendChild(pulse);
     this.pulse.addEventListener('mouseover', this.showPopover.bind(this));
@@ -77,7 +91,16 @@ class Pulse {
     });
   }
 
-  draw() {}
+  draw() {
+    const { scale } = this;
+    Object.assign(this.ring.style, {
+      transform: `scale(${scale})`
+    });
+    this.scale += 0.02;
+    if (scale > 2) {
+      this.scale = 1;
+    }
+  }
 }
 
 export default Pulse;
