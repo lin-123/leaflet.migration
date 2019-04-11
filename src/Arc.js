@@ -35,8 +35,7 @@ class Arc {
     });
   }
 
-  draw() {
-  }
+  draw() {}
 }
 
 export default Arc;

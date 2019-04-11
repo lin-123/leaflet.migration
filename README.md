@@ -46,6 +46,9 @@ migrationLayer.setData([{}])
 - [ ] separate styles and data
 - [ ] update return value of new MigrationLayer()
 
+### 1.0.3
+- [x] set pulse size by data value, radius, zoom
+
 ### 1.0.0
 - [x] add webpack
 - [x] add popover

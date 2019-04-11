@@ -1,4 +1,5 @@
 import Migration from './Migration';
+import { MIN_ZOOM } from './config';
 
 L.MigrationLayer = L.Class.extend({
   options: {
@@ -50,6 +51,7 @@ L.MigrationLayer = L.Class.extend({
         data,
         context: this.context,
         container,
+        map: this._map,
         popover: this.popover,
         style: this._style
       });
@@ -104,7 +106,16 @@ L.MigrationLayer = L.Class.extend({
     }
   },
   _bindMapEvents() {
-    this._map.on('moveend', () => {
+    this._map.on('moveend', (e) => {
+      console.log(e, e.target.getZoom());
+      const zoom = e.target.getZoom();
+      if (zoom < MIN_ZOOM) {
+        this.hide();
+        return;
+      }
+      if (!this._show) {
+        this.show();
+      }
       this.migration.play();
       this._draw();
     });

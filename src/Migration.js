@@ -2,17 +2,13 @@ import Marker from './Marker';
 import Line from './Line';
 import Pulse from './Pulse';
 import Spark from './Spark';
+import { extend } from './utils';
 
 class Migration {
-  constructor({
-    context, data, style, container, popover
-  }) {
+  // options = { context, data, style, container, popover }
+  constructor(options) {
     Object.assign(this, {
-      data,
-      context,
-      style,
-      container,
-      popover,
+      ...options,
       playAnimation: true,
       started: false,
       store: {
@@ -38,6 +34,9 @@ class Migration {
       arc: { label, font, width },
       pulse: { radius, borderWidth }
     } = this.style;
+
+    const dataRange = extend(data, i => i.value);
+
     if (data && data.length > 0) {
       const { container, popover } = this;
       data.forEach(({
@@ -60,10 +59,14 @@ class Migration {
           borderWidth: 0,
           borderColor: color
         });
+        // 计算每一个圆环的大小
         const pulse = new Pulse({
           x: to[0],
           y: to[1],
-          radius, color, borderWidth, container, popover, value, labels
+          dataRange,
+          radius,
+          zoom: this.map.getZoom(),
+          color, borderWidth, container, popover, value, labels
         });
         const spark = new Spark({
           startX: from[0],
@@ -71,6 +74,7 @@ class Migration {
           endX: to[0],
           endY: to[1],
           width: 15,
+          // width: value,
           color,
         });
 

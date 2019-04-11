@@ -1,11 +1,19 @@
 // 脉冲， label 圆环扩散
-import { calculateColor } from './utils';
-
 const domCache = [];
+const MIN_RADIUS = 3;
+
 class Pulse {
   constructor({
-    x, y, radius, color, borderWidth, container, popover, value, labels
+    x, y, color, container, popover, value, labels, dataRange, zoom,
+    // user config radius
+    radius,
   }) {
+    // 根据用户设置的 radius, data[x].value, zoom 来决定半径
+    const minRadius = radius / 2;
+    const [, max] = dataRange;
+    const standardR = (minRadius + value * radius / max) * zoom / 6;
+    const r = standardR > MIN_RADIUS ? standardR : MIN_RADIUS;
+
     Object.assign(this, {
       x,
       y,
@@ -14,11 +22,8 @@ class Pulse {
       popover,
       value,
       labels,
-      lineWidth: borderWidth,
-      shadowBlur: 50,
-      r: 2,
-      factor: 2 / radius,
-      maxRadius: radius,
+      r,
+      scale: 1
     });
     this.initDom();
   }
@@ -33,15 +38,38 @@ class Pulse {
   initDom() {
     if (domCache.length > 0) {
       this.pulse = domCache.pop();
+      [this.ring] = this.pulse.children;
     } else {
       this.pulse = document.createElement('div');
+      this.ring = document.createElement('div');
+      this.pulse.appendChild(this.ring);
     }
-    Object.assign(this.pulse.style, {
+    const {
+      x, y, r, color, pulse, ring
+    } = this;
+    Object.assign(pulse.style, {
       position: 'absolute',
       zIndex: '1',
       borderRadius: '50%',
+      width: `${2 * r}px`,
+      height: `${2 * r}px`,
+      left: `-${r}px`,
+      top: `-${r}px`,
+      background: color,
+      // boxShadow: `0 0 10px ${color}`,
+      transform: `translate(${x}px, ${y}px)`,
     });
-    this.container.appendChild(this.pulse);
+
+    Object.assign(ring.style, {
+      position: 'absolute',
+      borderRadius: '50%',
+      width: `${2 * r}px`,
+      height: `${2 * r}px`,
+      left: `${-1}px`,
+      top: `${-1}px`,
+      border: `1px solid ${color}`
+    });
+    this.container.appendChild(pulse);
     this.pulse.addEventListener('mouseover', this.showPopover.bind(this));
     this.pulse.addEventListener('mouseout', this.hidePopver.bind(this));
   }
@@ -64,23 +92,13 @@ class Pulse {
   }
 
   draw() {
-    const vr = 0.5;
-    this.r += vr;
-    const {
-      x, y, r, lineWidth, maxRadius, color
-    } = this;
-    const strokeColor = calculateColor(color, 1 - r / maxRadius);
-    Object.assign(this.pulse.style, {
-      width: `${2 * r}px`,
-      height: `${2 * r}px`,
-      border: `${lineWidth}px solid ${strokeColor}`,
-      left: `-${r + 1}px`,
-      top: `-${r + 3}px`,
-      transform: `translate(${x}px, ${y}px)`,
+    const { scale } = this;
+    Object.assign(this.ring.style, {
+      transform: `scale(${scale})`
     });
-
-    if (Math.abs(maxRadius - r) < 0.8) {
-      this.r = 0;
+    this.scale += 0.02;
+    if (scale > 2) {
+      this.scale = 1;
     }
   }
 }
