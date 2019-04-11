@@ -47,9 +47,11 @@ migrationLayer.setData([{}])
 
 ## feature list
 ### 1.1.0
+- [ ] export speed to config
 - [ ] layer.setStyle
 - [ ] separate styles and data
 - [ ] update return value of new MigrationLayer()
+- [ ] migration
 
 ### 1.0.3
 - [x] set pulse size by data value, radius, zoom

@@ -32,11 +32,49 @@
             border-width: 2px;
             background-color: white;
         }
+
+        .circle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 100px;
+            left: 100px;
+            border-radius: 50%;
+            background: red;
+            /* transform: translate(-50%, -50%); */
+        }
+
+        .pulse {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            left: -5px;
+            height: -5px;
+            border: 1px solid black;
+            border-radius: 50%;
+            /* transform: translate(-15px, -15px); */
+            animation: 1s ease .3s infinite pulse;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1)
+            }
+            50% {
+                transform: scale(1.2)
+            }
+            100%{
+                transform: scale(1)
+            }
+        }
     </style>
 </head>
 
 <body>
-    <div id="map"></div>
+    <!-- <div id="map"></div> -->
+    <div class="circle">
+        <div class="pulse"></div>
+    </div>
     <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
     <script type="text/javascript" src="./index.js"></script>
     <script>
@@ -95,7 +133,11 @@
             data: data,
             style: {
                 pulse: {
+<<<<<<< HEAD
                     radius: 10,
+=======
+                    radius: 30,
+>>>>>>> tmp
                     borderWidth: 3
                 },
                 arc: {

@@ -32,11 +32,30 @@
             border-width: 2px;
             background-color: white;
         }
+<<<<<<< HEAD
         .control {
             position: absolute;
             right: 100px;
             height: 100px;
             z-index: 1001;
+=======
+
+        .circle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 100px;
+            left: 100px;
+            border-radius: 50%;
+            background: red;
+            /* transform: translate(-50%, -50%); */
+        }
+        .control {
+            position: absolute;
+            z-index: 1111;
+            top: 0;
+            right: 0;
+>>>>>>> tmp
         }
     </style>
 </head>
@@ -45,6 +64,7 @@
     <div id="map"></div>
     <div class="control">
         <button onclick="remove()">remove</button>
+        <button onclick="destroy()">destroy</button>
     </div>
     <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
     <script type="text/javascript" src="./index.js"></script>
@@ -118,6 +138,10 @@
             migrationLayer.addTo(lrmap);
 
             window.remvoe = function() {
+                migrationLayer.remove()
+            }
+            window.destroy = function(){
+                console.log('destroy');
                 migrationLayer.destroy()
             }
         })();

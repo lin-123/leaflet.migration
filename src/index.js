@@ -14,12 +14,10 @@ L.MigrationLayer = L.Class.extend({
     Spark: {}
   },
   initialize({
-    map = {},
     data = {},
     style: { pulse, arc }
   }) {
     Object.assign(this, {
-      _map: map,
       _data: data,
       _style: {
         pulse: { ...pulse },
@@ -28,7 +26,6 @@ L.MigrationLayer = L.Class.extend({
     });
 
     this._show = true;
-    this._init();
   },
   _init() {
     const container = L.DomUtil.create('div', 'leaflet-ODLayer-container');
@@ -142,7 +139,9 @@ L.MigrationLayer = L.Class.extend({
     const topLeft = this._map.latLngToLayerPoint(bounds.getNorthWest());
     L.DomUtil.setPosition(this.container, topLeft);
   },
-  addTo() {
+  onAdd(map) {
+    this._map = map;
+    this._init();
     this._bindMapEvents();
     const bounds = this._map.getBounds();
     if (bounds && this.migration.playAnimation) {
@@ -153,6 +152,9 @@ L.MigrationLayer = L.Class.extend({
       this.migration.updateData(data);
       this.migration.start(this.canvas);
     }
+  },
+  addTo(map) {
+    map.addLayer(this);
     return this;
   },
   setData(data) {
@@ -172,6 +174,12 @@ L.MigrationLayer = L.Class.extend({
   },
   pause() {
     this.migration.pause();
+  },
+  onRemove(map) {
+    L.DomUtil.remove(this.container);
+    map.clearAllEventListeners();
+    this.migration.clear();
+    this.mapHandles = [];
   },
   destroy() {
     this.migration.clear();
