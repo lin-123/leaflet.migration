@@ -1,13 +1,19 @@
 // 脉冲， label 圆环扩散
 const domCache = [];
+const MIN_RADIUS = 3;
 
 class Pulse {
   constructor({
-    x, y, color, container, popover, value, labels, radius, dataRange
+    x, y, color, container, popover, value, labels, dataRange, zoom,
+    // user config radius
+    radius,
   }) {
+    // 根据用户设置的 radius, data[x].value, zoom 来决定半径
     const minRadius = radius / 2;
     const [, max] = dataRange;
-    const r = minRadius + value * radius / max;
+    const standardR = (minRadius + value * radius / max) * zoom / 6;
+    const r = standardR > MIN_RADIUS ? standardR : MIN_RADIUS;
+
     Object.assign(this, {
       x,
       y,
@@ -16,7 +22,6 @@ class Pulse {
       popover,
       value,
       labels,
-      radius,
       r,
     });
     this.initDom();

@@ -5,15 +5,10 @@ import Spark from './Spark';
 import { extend } from './utils';
 
 class Migration {
-  constructor({
-    context, data, style, container, popover
-  }) {
+  // options = { context, data, style, container, popover }
+  constructor(options) {
     Object.assign(this, {
-      data,
-      context,
-      style,
-      container,
-      popover,
+      ...options,
       playAnimation: true,
       started: false,
       store: {
@@ -70,6 +65,7 @@ class Migration {
           y: to[1],
           dataRange,
           radius,
+          zoom: this.map.getZoom(),
           color, borderWidth, container, popover, value, labels
         });
         const spark = new Spark({
