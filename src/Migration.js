@@ -2,6 +2,7 @@ import Marker from './Marker';
 import Line from './Line';
 import Pulse from './Pulse';
 import Spark from './Spark';
+import { extend } from './utils';
 
 class Migration {
   constructor({
@@ -38,6 +39,9 @@ class Migration {
       arc: { label, font, width },
       pulse: { radius, borderWidth }
     } = this.style;
+
+    const [, max] = extend(data, i => i.value);
+    console.log(max, radius);
     if (data && data.length > 0) {
       const { container, popover } = this;
       data.forEach(({
@@ -60,10 +64,12 @@ class Migration {
           borderWidth: 0,
           borderColor: color
         });
+        // 计算每一个圆环的大小
         const pulse = new Pulse({
           x: to[0],
           y: to[1],
-          radius, color, borderWidth, container, popover, value, labels
+          radiusFactor: value / max,
+          color, borderWidth, container, popover, value, labels
         });
         const spark = new Spark({
           startX: from[0],
@@ -71,6 +77,7 @@ class Migration {
           endX: to[0],
           endY: to[1],
           width: 15,
+          // width: value,
           color,
         });
 

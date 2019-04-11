@@ -1,10 +1,11 @@
 // 脉冲， label 圆环扩散
-import { calculateColor } from './utils';
-
 const domCache = [];
+const RADIUS_RANGE = [3, 10];
+const getRange = (factor) => RADIUS_RANGE[0] + 12 * factor;
+
 class Pulse {
   constructor({
-    x, y, radius, color, borderWidth, container, popover, value, labels
+    x, y, radiusFactor, color, container, popover, value, labels
   }) {
     Object.assign(this, {
       x,
@@ -14,11 +15,7 @@ class Pulse {
       popover,
       value,
       labels,
-      lineWidth: borderWidth,
-      shadowBlur: 50,
-      r: 2,
-      factor: 2 / radius,
-      maxRadius: radius,
+      r: getRange(radiusFactor),
     });
     this.initDom();
   }
@@ -36,12 +33,22 @@ class Pulse {
     } else {
       this.pulse = document.createElement('div');
     }
-    Object.assign(this.pulse.style, {
+    const {
+      x, y, r, color, pulse
+    } = this;
+    Object.assign(pulse.style, {
       position: 'absolute',
       zIndex: '1',
       borderRadius: '50%',
+      width: `${2 * r}px`,
+      height: `${2 * r}px`,
+      left: `-${r}px`,
+      top: `-${r}px`,
+      background: color,
+      boxShadow: `0 0 10px ${color}`,
+      transform: `translate(${x}px, ${y}px)`,
     });
-    this.container.appendChild(this.pulse);
+    this.container.appendChild(pulse);
     this.pulse.addEventListener('mouseover', this.showPopover.bind(this));
     this.pulse.addEventListener('mouseout', this.hidePopver.bind(this));
   }
@@ -63,26 +70,7 @@ class Pulse {
     });
   }
 
-  draw() {
-    const vr = 0.5;
-    this.r += vr;
-    const {
-      x, y, r, lineWidth, maxRadius, color
-    } = this;
-    const strokeColor = calculateColor(color, 1 - r / maxRadius);
-    Object.assign(this.pulse.style, {
-      width: `${2 * r}px`,
-      height: `${2 * r}px`,
-      border: `${lineWidth}px solid ${strokeColor}`,
-      left: `-${r + 1}px`,
-      top: `-${r + 3}px`,
-      transform: `translate(${x}px, ${y}px)`,
-    });
-
-    if (Math.abs(maxRadius - r) < 0.8) {
-      this.r = 0;
-    }
-  }
+  draw() {}
 }
 
 export default Pulse;

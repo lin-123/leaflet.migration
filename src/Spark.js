@@ -7,17 +7,9 @@ class Spark extends Arc {
   constructor(options) {
     super(options);
 
-    // if (startAngle * endAngle < 0) {
-    //   if (startAngle < 0) {
-    //     startAngle += Math.PI * 2;
-    //     endAngle += Math.PI * 2;
-    //   } else {
-    //     endAngle += Math.PI * 2;
-    //   }
-    // }
-
     this.tailPointsCount = 50; // 拖尾点数
-    this.factor = 2 / this.radius;
+    // 飞线速度
+    this.factor = 1 / this.radius;
     this.deltaAngle = (80 / Math.min(this.radius, 400)) / this.tailPointsCount;
     this.trailAngle = this.startAngle;
     this.arcAngle = this.startAngle;
