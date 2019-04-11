@@ -40,8 +40,8 @@ class Migration {
       pulse: { radius, borderWidth }
     } = this.style;
 
-    const [, max] = extend(data, i => i.value);
-    console.log(max, radius);
+    const dataRange = extend(data, i => i.value);
+
     if (data && data.length > 0) {
       const { container, popover } = this;
       data.forEach(({
@@ -68,7 +68,8 @@ class Migration {
         const pulse = new Pulse({
           x: to[0],
           y: to[1],
-          radiusFactor: value / max,
+          dataRange,
+          radius,
           color, borderWidth, container, popover, value, labels
         });
         const spark = new Spark({

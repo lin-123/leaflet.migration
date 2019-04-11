@@ -1,12 +1,13 @@
 // 脉冲， label 圆环扩散
 const domCache = [];
-const RADIUS_RANGE = [3, 10];
-const getRange = (factor) => RADIUS_RANGE[0] + 12 * factor;
 
 class Pulse {
   constructor({
-    x, y, radiusFactor, color, container, popover, value, labels
+    x, y, color, container, popover, value, labels, radius, dataRange
   }) {
+    const minRadius = radius / 2;
+    const [, max] = dataRange;
+    const r = minRadius + value * radius / max;
     Object.assign(this, {
       x,
       y,
@@ -15,7 +16,8 @@ class Pulse {
       popover,
       value,
       labels,
-      r: getRange(radiusFactor),
+      radius,
+      r,
     });
     this.initDom();
   }
