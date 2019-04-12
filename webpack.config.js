@@ -52,7 +52,7 @@ if (env === 'dev') {
     contentBase: path.join(__dirname, 'dist'),
     compress: true,
     open: true,
-    port: 8080
+    port: 3000
   };
 }
 
