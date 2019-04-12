@@ -4,6 +4,8 @@ dev:
 	DIR=example node src/index.js
 
 publish:
+	git add . &&\
+	git commit -m 'publish' &&\
 	npm publish
 
 test:
