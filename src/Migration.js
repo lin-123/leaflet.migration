@@ -18,7 +18,7 @@ class Migration {
         sparks: []
       }
     });
-    this.updateData(data);
+    this.updateData(options.data);
   }
 
   /*

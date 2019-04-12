@@ -41,7 +41,13 @@ L.MigrationLayer = L.Class.extend({
     this.context = this.canvas.getContext('2d');
     container.appendChild(this.canvas);
 
-    this.popover = this._getPopver();
+    try {
+      this.popover = this._getPopver();
+    } catch (e) {
+      debugger;
+    }
+
+
     container.appendChild(this.popover);
 
     this._map.getPanes().overlayPane.appendChild(container);
@@ -161,10 +167,6 @@ L.MigrationLayer = L.Class.extend({
     this._data = data;
     this._draw();
   },
-  // set style
-  // setStyle(style) {
-
-  // },
   hide() {
     this.container.style.display = 'none';
     this._show = false;

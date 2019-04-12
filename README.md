@@ -36,6 +36,10 @@ migrationLayer.setData([{}])
 
 ![alt text](.src/example.jpg)
 
+## Development
+- npm start
+- web server will listen on 3000
+- open http://localhost:3000
 
 ## Envirenment
 - node `v10.8.0`
