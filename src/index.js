@@ -40,14 +40,7 @@ L.MigrationLayer = L.Class.extend({
     this.canvas = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
     container.appendChild(this.canvas);
-
-    try {
-      this.popover = this._getPopver();
-    } catch (e) {
-      debugger;
-    }
-
-
+    this.popover = this._getPopver();
     container.appendChild(this.popover);
 
     this._map.getPanes().overlayPane.appendChild(container);
@@ -113,7 +106,6 @@ L.MigrationLayer = L.Class.extend({
   },
   _bindMapEvents() {
     this._map.on('moveend', (e) => {
-      console.log(e, e.target.getZoom());
       const zoom = e.target.getZoom();
       if (zoom < MIN_ZOOM) {
         this.hide();
