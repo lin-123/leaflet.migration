@@ -1,4 +1,5 @@
 # leaflet.migration
+leaflet plugin that provides migration layer.
 
 ## Usage
 ```
