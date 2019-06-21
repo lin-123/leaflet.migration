@@ -3,12 +3,20 @@ import Line from './Line';
 import Pulse from './Pulse';
 import Spark from './Spark';
 import { extend } from './utils';
+import { STYLE } from './config';
+
+const mergeStyle = (style) => {
+  if (!style) return STYLE;
+
+  return { ...STYLE, ...style };
+};
 
 class Migration {
   // options = { map, canvas, data, style, container }
-  constructor(options) {
+  constructor({ style, ...options }) {
     Object.assign(this, {
       ...options,
+      style: mergeStyle(style),
       playAnimation: true,
       started: false,
       store: {
@@ -22,7 +30,7 @@ class Migration {
   }
 
   setStyle(style) {
-    this.style = style;
+    this.style = mergeStyle(style);
     this.refresh();
   }
 
@@ -44,8 +52,7 @@ class Migration {
     const dataRange = extend(data, i => i.value);
     const {
       container, style: {
-        arc: { label, font, width },
-        pulse: { radius, borderWidth }
+        arcWidth, pulseRadius, label
       }
     } = this;
     data.forEach(({
@@ -56,8 +63,9 @@ class Migration {
         startY: from[1],
         endX: to[0],
         endY: to[1],
-        labels, label, font, width, color
+        labels, label, width: arcWidth, color
       });
+      // 三角箭头
       const marker = new Marker({
         x: to[0],
         y: to[1],
@@ -73,9 +81,9 @@ class Migration {
         x: to[0],
         y: to[1],
         dataRange,
-        radius,
+        radius: pulseRadius,
         zoom: this.map.getZoom(),
-        color, borderWidth, container, value, labels
+        color, container, value, labels
       });
       const spark = new Spark({
         startX: from[0],

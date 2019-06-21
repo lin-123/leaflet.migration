@@ -3,13 +3,10 @@ import { MIN_ZOOM } from './config';
 import popover from './popver';
 
 L.MigrationLayer = L.Layer.extend({
-  initialize(data = [], { pulse, arc }) {
+  initialize(_data = [], _style) {
     Object.assign(this, {
-      _data: data,
-      _style: {
-        pulse: { ...pulse },
-        arc: { ...arc }
-      }
+      _data,
+      _style
     });
 
     this._show = true;
@@ -19,32 +16,40 @@ L.MigrationLayer = L.Layer.extend({
     this._init();
     this._bindMapEvents();
     this._draw();
+    return this;
   },
   onRemove(map) {
     L.DomUtil.remove(this.container);
     map.clearAllEventListeners();
     this.migration.clear();
     this.mapHandles = [];
+    return this;
   },
   setData(data) {
     this._data = data;
     this._draw();
+    return this;
   },
   setStyle(style) {
     this.migration.setStyle(style);
+    return this;
   },
   hide() {
     this.container.style.display = 'none';
+    return this;
   },
   show() {
     this.container.style.display = '';
     this._show = true;
+    return this;
   },
   play() {
     this.migration.play();
+    return this;
   },
   pause() {
     this.migration.pause();
+    return this;
   },
 
   _init() {

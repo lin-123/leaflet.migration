@@ -1,12 +1,12 @@
 # TODO
-- [x] 配置数据
-- [x] 根据 leaflet 官方结构调整代码结构
-- [x] 配置样式 setStyle
 - [ ] 自定义 popover 样式
-- [ ] 根据 zoom 来调整 pulse 的半径
-- [ ] 重新梳理配置项
-
+- [ ] style, data 参数校验
 - [ ] add demo to gh-pages
+
+- [ ] export speed to config
+- [ ] layer.setStyle
+- [ ] separate styles and data
+- [ ] migration
 - [ ] rewrite readme by leaflet plugin guide
 
 # NOTE
@@ -24,3 +24,4 @@
   - initialize: 当图层类初始化的时候调用 const layer = L.yourLayer(option)
   - onAdd: 当图层被添加到 leaflet 实例上的时候调用 layer.addTo(map)
   - onRemove: map.remove(layer)
+- 每个函数都有返回值， 不知道返回什么的时候返回this

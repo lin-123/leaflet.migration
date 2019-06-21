@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Migration Layer</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css">
+    <link rel="stylesheet" href="./leaflet.css">
     <style>
         html,
         body {
@@ -64,8 +64,8 @@
         <button onclick="remove()">remove</button>
         <button onclick="destroy()">destroy</button>
     </div>
-    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
-    <script type="text/javascript" src="./index.js"></script>
+    <script src="./leaflet.js"></script>
+    <script src="./index.js"></script>
     <script>
         (function () {
             var lrmap = L.map('map').setView([35.4199, 95.2402], 5);
@@ -112,14 +112,9 @@
                     "value": 126.1445
                 }];
             var style = {
-                pulse: {
-                    radius: 10,
-                    borderWidth: 3
-                },
-                arc: {
-                    width: 1,
-                    label: true,
-                }
+                pulseRadius: 10,
+                arcWidth: 1,
+                label: true,
             };
             var migrationLayer = L.migrationLayer(data, style);
             var layer = migrationLayer.addTo(lrmap);
@@ -144,5 +139,4 @@
         })();
     </script>
 </body>
-
 </html>
