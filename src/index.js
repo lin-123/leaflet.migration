@@ -2,10 +2,7 @@ import Migration from './Migration';
 import { MIN_ZOOM } from './config';
 
 L.MigrationLayer = L.Layer.extend({
-  initialize({
-    data = {},
-    style: { pulse, arc }
-  }) {
+  initialize(data = [], { pulse, arc }) {
     Object.assign(this, {
       _data: data,
       _style: {
@@ -20,15 +17,7 @@ L.MigrationLayer = L.Layer.extend({
     this._map = map;
     this._init();
     this._bindMapEvents();
-    const bounds = this._map.getBounds();
-    if (bounds && this.migration.playAnimation) {
-      this._resize();
-      this._transform();
-
-      const data = this._convertData();
-      this.migration.updateData(data);
-      this.migration.start(this.canvas);
-    }
+    this._draw();
   },
   onRemove(map) {
     L.DomUtil.remove(this.container);
@@ -40,8 +29,11 @@ L.MigrationLayer = L.Layer.extend({
     this._data = data;
     this._draw();
   },
+  setStyle(style) {
+    this.migration.setStyle(style);
+  },
   hide() {
-    this.container.styl
+    this.container.style.display = 'none';
   },
   show() {
     this.container.style.display = '';
@@ -55,30 +47,19 @@ L.MigrationLayer = L.Layer.extend({
   },
 
   _init() {
+    // div > canvas, div.popover
     const container = L.DomUtil.create('div', 'leaflet-ODLayer-container');
-    container.style.position = 'absolute';
-    const { x, y } = this._map.getSize();
-    container.style.width = `${x}px`;
-    container.style.height = `${y}px`;
     this.container = container;
-    this.canvas = document.createElement('canvas');
-    this.context = this.canvas.getContext('2d');
-    container.appendChild(this.canvas);
-    this.popover = this._getPopver();
-    container.appendChild(this.popover);
-
-    this._map.getPanes().overlayPane.appendChild(container);
-    const data = this._convertData();
-    this.migration = new Migration({
-      data,
-      context: this.context,
-      container,
-      map: this._map,
-      popover: this.popover,
-      style: this._style
+    const { x, y } = this._map.getSize();
+    Object.assign(container.style, {
+      position: 'absolute',
+      width: `${x}px`,
+      height: `${y}px`,
     });
-  },
-  _getPopver() {
+    const canvas = document.createElement('canvas');
+    this.canvas = canvas;
+    container.appendChild(canvas);
+
     const popover = document.createElement('div');
     Object.assign(popover.style, {
       position: 'absolute',
@@ -91,40 +72,17 @@ L.MigrationLayer = L.Layer.extend({
       borderRadius: '5px',
       padding: '8px 16px'
     });
-    return popover;
-  },
-  _resize() {
-    const bounds = this._map.getBounds();
-    const topleft = bounds.getNorthWest();
-    const { y } = this._map.latLngToContainerPoint(topleft);
-    // 当地图缩放或者平移到整个地图的范围小于外层容器的范围的时候，要对this.container进行上下平移操作，反之则回归原位
-    if (y > 0) {
-      this.container.style.top = `${-y}px`;
-    } else {
-      this.container.style.top = '0px';
-    }
+    container.appendChild(popover);
 
-    const containerStyle = window.getComputedStyle(this._map.getContainer());
-    this.canvas.setAttribute('width', parseInt(containerStyle.width, 10));
-    this.canvas.setAttribute('height', parseInt(containerStyle.height, 10));
-  },
-  _convertData() {
-    const { _map, _data } = this;
-    const bounds = _map.getBounds();
-
-    if (_data && bounds) {
-      const getLatLng = ([lng, lat]) => {
-        const { x, y } = _map.latLngToContainerPoint(new L.LatLng(lat, lng));
-        return [x, y];
-      };
-
-      // opt = { labels, value, color }
-      return _data.map(({ from, to, ...opt }) => ({
-        from: getLatLng(from),
-        to: getLatLng(to),
-        ...opt
-      }));
-    }
+    this._map.getPanes().overlayPane.appendChild(container);
+    this.migration = new Migration({
+      canvas,
+      container,
+      popover,
+      map: this._map,
+      data: this._convertData(),
+      style: this._style
+    });
   },
   _bindMapEvents() {
     this._map.on('moveend', (e) => {
@@ -153,18 +111,46 @@ L.MigrationLayer = L.Layer.extend({
     const bounds = this._map.getBounds();
     if (bounds && this.migration.playAnimation) {
       this._resize();
-      this._transform();
-      const data = this._convertData();
-      this.migration.updateData(data);
-      this.migration.start(this.canvas);
+      this.migration.setData(this._convertData());
     }
   },
-  _transform() {
+  _convertData() {
+    const { _map, _data } = this;
+    const bounds = _map.getBounds();
+    if (_data && bounds) {
+      const getLatLng = ([lng, lat]) => {
+        const { x, y } = _map.latLngToContainerPoint(new L.LatLng(lat, lng));
+        return [x, y];
+      };
+
+      // opt = { labels, value, color }
+      return _data.map(({ from, to, ...opt }) => ({
+        from: getLatLng(from),
+        to: getLatLng(to),
+        ...opt
+      }));
+    }
+    return [];
+  },
+  _resize() {
     const bounds = this._map.getBounds();
-    const topLeft = this._map.latLngToLayerPoint(bounds.getNorthWest());
-    L.DomUtil.setPosition(this.container, topLeft);
+    const topleft = bounds.getNorthWest();
+    const { y } = this._map.latLngToContainerPoint(topleft);
+    // 当地图缩放或者平移到整个地图的范围小于外层容器的范围的时候，要对this.container进行上下平移操作，反之则回归原位
+    if (y > 0) {
+      this.container.style.top = `${-y}px`;
+    } else {
+      this.container.style.top = '0px';
+    }
+
+    const containerStyle = window.getComputedStyle(this._map.getContainer());
+    this.canvas.setAttribute('width', parseInt(containerStyle.width, 10));
+    this.canvas.setAttribute('height', parseInt(containerStyle.height, 10));
+
+    const posi = this._map.latLngToLayerPoint(topleft);
+    L.DomUtil.setPosition(this.container, posi);
   },
 });
-L.migrationLayer = function (options) {
-  return new L.MigrationLayer(options);
+L.migrationLayer = function (data, options) {
+  return new L.MigrationLayer(data, options);
 };

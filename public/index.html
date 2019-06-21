@@ -55,9 +55,12 @@
 <body>
     <div id="map"></div>
     <div class="control">
-        <button onclick="add()">add</button>
+        <button onclick="rendomData()">rendomData</button>
+        <button onclick="rendomStyle()">rendomStyle</button>
         <button onclick="show()">show</button>
         <button onclick="hide()">hide</button>
+
+        <button onclick="add()">add</button>
         <button onclick="remove()">remove</button>
         <button onclick="destroy()">destroy</button>
     </div>
@@ -108,45 +111,36 @@
                     "labels": ["北京", "黑龙江"],
                     "value": 126.1445
                 }];
-
-            data = data.map(item => {
-                return {
-                    ...item,
-                    value: parseInt(Math.random() * 100)
-                }
-            });
-            var migrationLayer = L.migrationLayer({
-                map: lrmap,
-                data: data,
-                style: {
-                    pulse: {
-                        radius: 10,
-                        borderWidth: 3
-                    },
-                    arc: {
-                        width: 1,
-                        label: true,
-                    }
+            var style = {
+                pulse: {
+                    radius: 10,
+                    borderWidth: 3
                 },
-                maxWidth: 10
-            });
+                arc: {
+                    width: 1,
+                    label: true,
+                }
+            };
+            var migrationLayer = L.migrationLayer(data, style);
             var layer = migrationLayer.addTo(lrmap);
-            window.add = function() {
-                migrationLayer.addTo(lrmap)
+            window.rendomData = function() {
+                data = data.map(item => {
+                    return {
+                        ...item,
+                        value: parseInt(Math.random() * 100)
+                    }
+                });
+                migrationLayer.setData(data)
             }
-            window.remove = function() {
-                lrmap.removeLayer(layer)
+            window.rendomStyle = function() {
+                style.pulse.radius = Math.random() * 20
+                style.arc.width = Math.random() * 5
+                migrationLayer.setStyle(style)
             }
-            window.show = function() {
-                migrationLayer.show()
-            }
-            window.hide = function() {
-                migrationLayer.hide()
-            }
-            window.destroy = function(){
-                console.log('destroy');
-                migrationLayer.destroy()
-            }
+            window.add = function() { migrationLayer.addTo(lrmap) }
+            window.remove = function() { lrmap.removeLayer(layer) }
+            window.show = function() { migrationLayer.show() }
+            window.hide = function() { migrationLayer.hide() }
         })();
     </script>
 </body>
