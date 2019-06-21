@@ -4,6 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
+    "prepublish": "npm run build",
     "start": "webpack-dev-server --inline --progress --config ./webpack.config.js",
     "build": "NODE_ENV=production webpack",
     "lint": "eslint ."

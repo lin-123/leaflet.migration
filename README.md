@@ -50,7 +50,7 @@ migrationLayer.setData([{}])
 - [ ] export speed to config
 - [ ] layer.setStyle
 - [ ] separate styles and data
-- [ ] update return value of new MigrationLayer()
+- [x] update return value of new MigrationLayer()
 - [ ] migration
 
 ### 1.0.3

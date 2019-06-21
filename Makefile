@@ -1,8 +1,5 @@
 .PHONY: test clean unit e2e
 
-dev:
-	DIR=example node src/index.js
-
 publish:
 	git add . &&\
 	git commit -m 'publish' &&\

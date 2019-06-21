@@ -1,18 +1,7 @@
 import Migration from './Migration';
 import { MIN_ZOOM } from './config';
 
-L.MigrationLayer = L.Class.extend({
-  options: {
-    map: {},
-    data: {},
-    pulseRadius: 25,
-    pulseBorderWidth: 3,
-    arcWidth: 1,
-    arcLabel: true,
-    arcLabelFont: '15px sans-serif',
-    Marker: {},
-    Spark: {}
-  },
+L.MigrationLayer = L.Layer.extend({
   initialize({
     data = {},
     style: { pulse, arc }
@@ -27,6 +16,44 @@ L.MigrationLayer = L.Class.extend({
 
     this._show = true;
   },
+  onAdd(map) {
+    this._map = map;
+    this._init();
+    this._bindMapEvents();
+    const bounds = this._map.getBounds();
+    if (bounds && this.migration.playAnimation) {
+      this._resize();
+      this._transform();
+
+      const data = this._convertData();
+      this.migration.updateData(data);
+      this.migration.start(this.canvas);
+    }
+  },
+  onRemove(map) {
+    L.DomUtil.remove(this.container);
+    map.clearAllEventListeners();
+    this.migration.clear();
+    this.mapHandles = [];
+  },
+  setData(data) {
+    this._data = data;
+    this._draw();
+  },
+  hide() {
+    this.container.styl
+  },
+  show() {
+    this.container.style.display = '';
+    this._show = true;
+  },
+  play() {
+    this.migration.play();
+  },
+  pause() {
+    this.migration.pause();
+  },
+
   _init() {
     const container = L.DomUtil.create('div', 'leaflet-ODLayer-container');
     container.style.position = 'absolute';
@@ -41,17 +68,15 @@ L.MigrationLayer = L.Class.extend({
     container.appendChild(this.popover);
 
     this._map.getPanes().overlayPane.appendChild(container);
-    if (!this.migration) {
-      const data = this._convertData();
-      this.migration = new Migration({
-        data,
-        context: this.context,
-        container,
-        map: this._map,
-        popover: this.popover,
-        style: this._style
-      });
-    }
+    const data = this._convertData();
+    this.migration = new Migration({
+      data,
+      context: this.context,
+      container,
+      map: this._map,
+      popover: this.popover,
+      style: this._style
+    });
   },
   _getPopver() {
     const popover = document.createElement('div');
@@ -139,55 +164,6 @@ L.MigrationLayer = L.Class.extend({
     const topLeft = this._map.latLngToLayerPoint(bounds.getNorthWest());
     L.DomUtil.setPosition(this.container, topLeft);
   },
-  onAdd(map) {
-    this._map = map;
-    this._init();
-    this._bindMapEvents();
-    const bounds = this._map.getBounds();
-    if (bounds && this.migration.playAnimation) {
-      this._resize();
-      this._transform();
-
-      const data = this._convertData();
-      this.migration.updateData(data);
-      this.migration.start(this.canvas);
-    }
-  },
-  addTo(map) {
-    map.addLayer(this);
-    return this;
-  },
-  setData(data) {
-    this._data = data;
-    this._draw();
-  },
-  hide() {
-    this.container.style.display = 'none';
-    this._show = false;
-  },
-  show() {
-    this.container.style.display = '';
-    this._show = true;
-  },
-  play() {
-    this.migration.play();
-  },
-  pause() {
-    this.migration.pause();
-  },
-  onRemove(map) {
-    L.DomUtil.remove(this.container);
-    map.clearAllEventListeners();
-    this.migration.clear();
-    this.mapHandles = [];
-  },
-  destroy() {
-    this.migration.clear();
-    this.container.parentNode.removeChild(this.container);
-    this._map.clearAllEventListeners();
-    this.mapHandles = [];
-  }
-
 });
 L.migrationLayer = function (options) {
   return new L.MigrationLayer(options);

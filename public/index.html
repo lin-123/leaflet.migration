@@ -32,13 +32,6 @@
             border-width: 2px;
             background-color: white;
         }
-<<<<<<< HEAD
-        .control {
-            position: absolute;
-            right: 100px;
-            height: 100px;
-            z-index: 1001;
-=======
 
         .circle {
             position: absolute;
@@ -55,7 +48,6 @@
             z-index: 1111;
             top: 0;
             right: 0;
->>>>>>> tmp
         }
     </style>
 </head>
@@ -63,6 +55,9 @@
 <body>
     <div id="map"></div>
     <div class="control">
+        <button onclick="add()">add</button>
+        <button onclick="show()">show</button>
+        <button onclick="hide()">hide</button>
         <button onclick="remove()">remove</button>
         <button onclick="destroy()">destroy</button>
     </div>
@@ -135,10 +130,18 @@
                 },
                 maxWidth: 10
             });
-            migrationLayer.addTo(lrmap);
-
-            window.remvoe = function() {
-                migrationLayer.remove()
+            var layer = migrationLayer.addTo(lrmap);
+            window.add = function() {
+                migrationLayer.addTo(lrmap)
+            }
+            window.remove = function() {
+                lrmap.removeLayer(layer)
+            }
+            window.show = function() {
+                migrationLayer.show()
+            }
+            window.hide = function() {
+                migrationLayer.hide()
             }
             window.destroy = function(){
                 console.log('destroy');
