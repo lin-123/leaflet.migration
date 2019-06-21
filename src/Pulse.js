@@ -1,10 +1,12 @@
 // 脉冲， label 圆环扩散
+import popover from './popver';
+
 const domCache = [];
 const MIN_RADIUS = 3;
 
 class Pulse {
   constructor({
-    x, y, color, container, popover, value, labels, dataRange, zoom,
+    x, y, color, container, value, labels, dataRange, zoom,
     // user config radius
     radius,
   }) {
@@ -19,19 +21,23 @@ class Pulse {
       y,
       color,
       container,
-      popover,
       value,
       labels,
       r,
       scale: 1
     });
+    this.showPopover = (e) => {
+      const { clientX, clientY } = e;
+      popover.show(clientX, clientY, value, labels);
+    };
+    this.hidPopover = popover.hide.bind(popover);
     this.initDom();
   }
 
   clear() {
     domCache.push(this.pulse);
-    this.pulse.removeEventListener('mouseover', this.showPopover.bind(this));
-    this.pulse.removeEventListener('mouseout', this.hidePopver.bind(this));
+    this.pulse.removeEventListener('mouseover', this.showPopover);
+    this.pulse.removeEventListener('mouseout', this.hidPopover);
     this.container.removeChild(this.pulse);
   }
 
@@ -70,25 +76,9 @@ class Pulse {
       border: `1px solid ${color}`
     });
     this.container.appendChild(pulse);
-    this.pulse.addEventListener('mouseover', this.showPopover.bind(this));
-    this.pulse.addEventListener('mouseout', this.hidePopver.bind(this));
-  }
 
-  hidePopver() {
-    Object.assign(this.popover.style, {
-      display: 'none'
-    });
-  }
-
-  showPopover() {
-    const {
-      x, y, popover, value, labels
-    } = this;
-    popover.innerText = `${labels[1]}: ${value}`;
-    Object.assign(popover.style, {
-      display: 'block',
-      transform: `translate(${x}px, ${y}px)`,
-    });
+    this.pulse.addEventListener('mouseover', this.showPopover);
+    this.pulse.addEventListener('mouseout', this.hidPopover);
   }
 
   draw() {

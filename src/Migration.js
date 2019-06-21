@@ -5,7 +5,7 @@ import Spark from './Spark';
 import { extend } from './utils';
 
 class Migration {
-  // options = { map, canvas, data, style, container, popover }
+  // options = { map, canvas, data, style, container }
   constructor(options) {
     Object.assign(this, {
       ...options,
@@ -43,7 +43,7 @@ class Migration {
 
     const dataRange = extend(data, i => i.value);
     const {
-      container, popover, style: {
+      container, style: {
         arc: { label, font, width },
         pulse: { radius, borderWidth }
       }
@@ -75,7 +75,7 @@ class Migration {
         dataRange,
         radius,
         zoom: this.map.getZoom(),
-        color, borderWidth, container, popover, value, labels
+        color, borderWidth, container, value, labels
       });
       const spark = new Spark({
         startX: from[0],

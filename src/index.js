@@ -1,5 +1,6 @@
 import Migration from './Migration';
 import { MIN_ZOOM } from './config';
+import popover from './popver';
 
 L.MigrationLayer = L.Layer.extend({
   initialize(data = [], { pulse, arc }) {
@@ -59,20 +60,7 @@ L.MigrationLayer = L.Layer.extend({
     const canvas = document.createElement('canvas');
     this.canvas = canvas;
     container.appendChild(canvas);
-
-    const popover = document.createElement('div');
-    Object.assign(popover.style, {
-      position: 'absolute',
-      zIndex: '11',
-      left: 0,
-      top: 0,
-      border: '1px solid grey',
-      display: 'none',
-      background: 'rgba(255,255,255,.3)',
-      borderRadius: '5px',
-      padding: '8px 16px'
-    });
-    container.appendChild(popover);
+    container.appendChild(popover.el);
 
     this._map.getPanes().overlayPane.appendChild(container);
     this.migration = new Migration({
