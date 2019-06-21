@@ -1,6 +1,7 @@
 # TODO
 - [x] 配置数据
 - [x] 根据 leaflet 官方结构调整代码结构
+- [ ] add demo to gh-pages
 - [ ] 配置样式
 - [ ] 根据 zoom 来调整 pulse 的半径
 - [ ] 重新梳理配置项
