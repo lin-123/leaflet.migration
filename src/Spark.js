@@ -1,7 +1,6 @@
 // 飞线， 根据曲线的路径飞行
 import Arc from './Arc';
 import Marker from './Marker';
-import { calculateColor } from './utils';
 
 class Spark extends Arc {
   constructor(options) {
@@ -49,7 +48,7 @@ class Spark extends Arc {
     } = this;
     // 匀速
     const angle = trailAngle + factor;
-    const strokeColor = calculateColor(color, 0.1);
+    const strokeColor = color;
     if (this.animateBlur) {
       this.arcAngle = angle;
     }
@@ -61,7 +60,7 @@ class Spark extends Arc {
     // 拖尾效果
     const count = this.tailPointsCount;
     for (let i = 0; i < count; i++) {
-      const arcColor = calculateColor(color, 0.3 - 0.3 / count * i);
+      const arcColor = color;
       const tailLineWidth = 5;
       if (trailAngle - deltaAngle * i > this.startAngle) {
         this.drawArc(

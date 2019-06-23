@@ -27,20 +27,20 @@ const webpackConfig = {
     publicPath: '/',
     libraryTarget: 'umd',
     library: 'VueGis3DBridge'
-  },
-  plugins: [
+  }
+};
+
+const env = process.env.NODE_ENV || 'dev';
+if (env === 'dev') {
+  webpackConfig.plugins = [
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: path.resolve(__dirname, 'public', 'index.html'),
       inject: true
     })
-  ]
-};
-
-const env = process.env.NODE_ENV || 'dev';
-if (env === 'dev') {
+  ];
   webpackConfig.devServer = {
-    contentBase: path.join(__dirname, 'dist'),
+    contentBase: path.join(__dirname, 'public'),
     compress: true,
     open: true,
     port: 3000
