@@ -1,13 +1,18 @@
 # TODO
-- [ ] 自定义 popover 样式
-- [ ] style, data 参数校验
 - [ ] add demo to gh-pages
 
+- [ ] 自定义 popover 样式
+- [ ] style, data 参数校验
 - [ ] export speed to config
-- [ ] layer.setStyle
-- [ ] separate styles and data
-- [ ] migration
-- [ ] rewrite readme by leaflet plugin guide
+
+- [x] rewrite readme by leaflet plugin guide
+
+# way
+```
+{
+  popover: (labels, value) => el
+}
+```
 
 # NOTE
 - leaflet plugin rfc: https://github.com/Leaflet/Leaflet/blob/master/PLUGIN-GUIDE.md#presentation

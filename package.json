@@ -15,7 +15,6 @@
   "author": "linkaka",
   "license": "ISC",
   "dependencies": {
-    "leaflet": "^1.5.1",
     "power-assert": "^1.6.1"
   },
   "repository": {
