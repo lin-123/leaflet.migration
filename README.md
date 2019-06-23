@@ -36,11 +36,13 @@ map.remove(migrationLayer)
 ## API
 
 Data
+
 type|description
 --|--
 `[<MigrationData>]`| migration data list
 
 MigrationData
+
 attribute|type|description
 --|--|--
 labels|`[<string>from, <string> to]`|label
@@ -50,6 +52,7 @@ color|string|the color of each arc and pulse
 value|number|intense value of migration line
 
 Options|Style
+
 option|type|default|description
 --|--|--|--
 pulseRadius|number|10|pulse max radius, pulse radius from 3 to this value
@@ -57,6 +60,7 @@ arcWidth|number|1|arc border width
 label|boolean|true|set it to false if you don't want show label
 
 Options|EventHandler
+
 method|returns|description
 --|--|--
 replacePopover(`<pixel>x`, `<pixel>y`, `<MigrationData>data`, `<integer>index`)|Element|replace default popover by return element
@@ -64,6 +68,7 @@ onShowPopover(`<MigrationData>data`, `<integer>index`)|none|called on mouse hove
 onHidePopover(`<integer>index`)|none|called on mouse leave pulse
 
 Methods
+
 method|returns|descrition
 --|--|--
 setData(`[<MigrationData>]`)|this|update migration data
@@ -74,6 +79,7 @@ play()|this|run animate of arc and pulse
 pause()|this|pause animate of arc and pulse
 
 Methods inherited from [L.Layer](https://leafletjs.com/reference-1.5.0.html#layer)
+
 method|returns|descrition
 --|--|--
 onAdd(`<Map> map`)|this|called on L.migrationLayer(data, style).addTo(map)
