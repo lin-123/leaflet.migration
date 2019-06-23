@@ -71,9 +71,9 @@ window.rendomData = function () {
   migrationLayer.setData(data)
 }
 window.rendomStyle = function () {
-  style.pulse.radius = Math.random() * 20
-  style.arc.width = Math.random() * 5
-  migrationLayer.setStyle(style)
+  options.pulseRadius = Math.random() * 20
+  options.arcWidth = Math.random() * 5
+  migrationLayer.setStyle(options)
 }
 window.add = function () {
   migrationLayer.addTo(lrmap)
