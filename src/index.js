@@ -1,108 +1,77 @@
 import Migration from './Migration';
 import { MIN_ZOOM } from './config';
 
-L.MigrationLayer = L.Class.extend({
-  options: {
-    map: {},
-    data: {},
-    pulseRadius: 25,
-    pulseBorderWidth: 3,
-    arcWidth: 1,
-    arcLabel: true,
-    arcLabelFont: '15px sans-serif',
-    Marker: {},
-    Spark: {}
-  },
-  initialize({
-    map = {},
-    data = {},
-    style: { pulse, arc }
-  }) {
+L.MigrationLayer = L.Layer.extend({
+  initialize(_data = [], options) {
     Object.assign(this, {
-      _map: map,
-      _data: data,
-      _style: {
-        pulse: { ...pulse },
-        arc: { ...arc }
-      }
+      _data,
+      options
     });
 
     this._show = true;
+  },
+  onAdd(map) {
+    this._map = map;
     this._init();
+    this._bindMapEvents();
+    this._draw();
+    return this;
   },
+  onRemove(map) {
+    L.DomUtil.remove(this.container);
+    map.clearAllEventListeners();
+    this.migration.clear();
+    this.mapHandles = [];
+    return this;
+  },
+  setData(data) {
+    this._data = data;
+    this._draw();
+    return this;
+  },
+  setStyle(style) {
+    this.migration.setStyle(style);
+    return this;
+  },
+  hide() {
+    this.container.style.display = 'none';
+    return this;
+  },
+  show() {
+    this.container.style.display = '';
+    this._show = true;
+    return this;
+  },
+  play() {
+    this.migration.play();
+    return this;
+  },
+  pause() {
+    this.migration.pause();
+    return this;
+  },
+
   _init() {
+    // div > canvas, div.popover
     const container = L.DomUtil.create('div', 'leaflet-ODLayer-container');
-    container.style.position = 'absolute';
-    const { x, y } = this._map.getSize();
-    container.style.width = `${x}px`;
-    container.style.height = `${y}px`;
     this.container = container;
-    this.canvas = document.createElement('canvas');
-    this.context = this.canvas.getContext('2d');
-    container.appendChild(this.canvas);
-    this.popover = this._getPopver();
-    container.appendChild(this.popover);
-
-    this._map.getPanes().overlayPane.appendChild(container);
-    if (!this.migration) {
-      const data = this._convertData();
-      this.migration = new Migration({
-        data,
-        context: this.context,
-        container,
-        map: this._map,
-        popover: this.popover,
-        style: this._style
-      });
-    }
-  },
-  _getPopver() {
-    const popover = document.createElement('div');
-    Object.assign(popover.style, {
+    const { x, y } = this._map.getSize();
+    Object.assign(container.style, {
       position: 'absolute',
-      zIndex: '11',
-      left: 0,
-      top: 0,
-      border: '1px solid grey',
-      display: 'none',
-      background: 'rgba(255,255,255,.3)',
-      borderRadius: '5px',
-      padding: '8px 16px'
+      width: `${x}px`,
+      height: `${y}px`,
     });
-    return popover;
-  },
-  _resize() {
-    const bounds = this._map.getBounds();
-    const topleft = bounds.getNorthWest();
-    const { y } = this._map.latLngToContainerPoint(topleft);
-    // 当地图缩放或者平移到整个地图的范围小于外层容器的范围的时候，要对this.container进行上下平移操作，反之则回归原位
-    if (y > 0) {
-      this.container.style.top = `${-y}px`;
-    } else {
-      this.container.style.top = '0px';
-    }
-
-    const containerStyle = window.getComputedStyle(this._map.getContainer());
-    this.canvas.setAttribute('width', parseInt(containerStyle.width, 10));
-    this.canvas.setAttribute('height', parseInt(containerStyle.height, 10));
-  },
-  _convertData() {
-    const { _map, _data } = this;
-    const bounds = _map.getBounds();
-
-    if (_data && bounds) {
-      const getLatLng = ([lng, lat]) => {
-        const { x, y } = _map.latLngToContainerPoint(new L.LatLng(lat, lng));
-        return [x, y];
-      };
-
-      // opt = { labels, value, color }
-      return _data.map(({ from, to, ...opt }) => ({
-        from: getLatLng(from),
-        to: getLatLng(to),
-        ...opt
-      }));
-    }
+    const canvas = document.createElement('canvas');
+    this.canvas = canvas;
+    container.appendChild(canvas);
+    this._map.getPanes().overlayPane.appendChild(container);
+    this.migration = new Migration({
+      canvas,
+      container,
+      map: this._map,
+      data: this._convertData(),
+      options: this.options
+    });
   },
   _bindMapEvents() {
     this._map.on('moveend', (e) => {
@@ -131,56 +100,46 @@ L.MigrationLayer = L.Class.extend({
     const bounds = this._map.getBounds();
     if (bounds && this.migration.playAnimation) {
       this._resize();
-      this._transform();
-      const data = this._convertData();
-      this.migration.updateData(data);
-      this.migration.start(this.canvas);
+      this.migration.setData(this._convertData());
     }
   },
-  _transform() {
-    const bounds = this._map.getBounds();
-    const topLeft = this._map.latLngToLayerPoint(bounds.getNorthWest());
-    L.DomUtil.setPosition(this.container, topLeft);
-  },
-  addTo() {
-    this._bindMapEvents();
-    const bounds = this._map.getBounds();
-    if (bounds && this.migration.playAnimation) {
-      this._resize();
-      this._transform();
+  _convertData() {
+    const { _map, _data } = this;
+    const bounds = _map.getBounds();
+    if (_data && bounds) {
+      const getLatLng = ([lng, lat]) => {
+        const { x, y } = _map.latLngToContainerPoint(new L.LatLng(lat, lng));
+        return [x, y];
+      };
 
-      const data = this._convertData();
-      this.migration.updateData(data);
-      this.migration.start(this.canvas);
+      // opt = { labels, value, color }
+      return _data.map(({ from, to, ...opt }) => ({
+        from: getLatLng(from),
+        to: getLatLng(to),
+        ...opt
+      }));
     }
-    return this;
+    return [];
   },
-  setData(data) {
-    this._data = data;
-    this._draw();
-  },
-  hide() {
-    this.container.style.display = 'none';
-    this._show = false;
-  },
-  show() {
-    this.container.style.display = '';
-    this._show = true;
-  },
-  play() {
-    this.migration.play();
-  },
-  pause() {
-    this.migration.pause();
-  },
-  destroy() {
-    this.migration.clear();
-    this.container.parentNode.removeChild(this.container);
-    this._map.clearAllEventListeners();
-    this.mapHandles = [];
-  }
+  _resize() {
+    const bounds = this._map.getBounds();
+    const topleft = bounds.getNorthWest();
+    const { y } = this._map.latLngToContainerPoint(topleft);
+    // 当地图缩放或者平移到整个地图的范围小于外层容器的范围的时候，要对this.container进行上下平移操作，反之则回归原位
+    if (y > 0) {
+      this.container.style.top = `${-y}px`;
+    } else {
+      this.container.style.top = '0px';
+    }
 
+    const containerStyle = window.getComputedStyle(this._map.getContainer());
+    this.canvas.setAttribute('width', parseInt(containerStyle.width, 10));
+    this.canvas.setAttribute('height', parseInt(containerStyle.height, 10));
+
+    const posi = this._map.latLngToLayerPoint(topleft);
+    L.DomUtil.setPosition(this.container, posi);
+  },
 });
-L.migrationLayer = function (options) {
-  return new L.MigrationLayer(options);
+L.migrationLayer = function (data, options) {
+  return new L.MigrationLayer(data, options);
 };

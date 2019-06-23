@@ -4,124 +4,42 @@
 <head>
     <meta charset="UTF-8">
     <title>Migration Layer</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css">
-    <style>
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-        }
-
-        #map {
-            position: absolute;
-            height: 100%;
-            width: 100%;
-        }
-
-        #event {
-            position: absolute;
-            top: 50px;
-            right: 600px;
-            height: 100px;
-            width: 400px;
-            z-index: 10000;
-        }
-
-        .btn {
-            border-color: gray;
-            border-width: 2px;
-            background-color: white;
-        }
-        .control {
-            position: absolute;
-            right: 100px;
-            height: 100px;
-            z-index: 1001;
-        }
-    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="index.css">
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
 </head>
 
 <body>
-    <div id="map"></div>
-    <div class="control">
-        <button onclick="remove()">remove</button>
+    <div class="box">
+        <div class="map" id="map1"></div>
+        <div class="control">
+            <button onclick="rendomData()">rendomData</button>
+            <button onclick="rendomStyle()">rendomStyle</button>
+            <button onclick="show()">show</button>
+            <button onclick="hide()">hide</button>
+
+            <button onclick="add()">add</button>
+            <button onclick="remove()">remove</button>
+            <button onclick="destroy()">destroy</button>
+        </div>
     </div>
-    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
-    <script type="text/javascript" src="./index.js"></script>
-    <script>
-        (function () {
-            var lrmap = L.map('map').setView([35.4199, 95.2402], 5);
-            L.tileLayer('http://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}', {
-                subdomains: ["1", "2", "3", "4"]
-            }).addTo(lrmap);
-            var red = '#ff0000'
-            var green = '#00ff00'
-            var data = [{
-                    "color": "#3aa8e4",
-                    "from": [116.404844, 39.91405],
-                    "to": [84.9023, 42.148],
-                    "labels": ["北京", "新疆"],
-                    "value": 84.9023
-                }, {
-                    "color": "#3aa8e4",
-                    "from": [116.404844, 39.91405],
-                    "to": [87.8695, 31.6846],
-                    "labels": ["北京", "西藏"],
-                    "value": 87.8695
-                }, {
-                    "color": "#3aa8e4",
-                    "from": [116.404844, 39.91405],
-                    "to": [112.5977, 41.3408],
-                    "labels": ["北京", "内蒙古"],
-                    "value": 112.5977
-                }, {
-                    "color": "#3aa8e4",
-                    "from": [116.404844, 39.91405],
-                    "to": [95.2402, 35.4199],
-                    "labels": ["北京", "青海"],
-                    "value": 95.2402
-                }, {
-                    "color": "#3aa8e4",
-                    "from": [116.404844, 39.91405],
-                    "to": [101.9199, 30.1904],
-                    "labels": ["北京", "四川"],
-                    "value": 1.9199
-                }, {
-                    "color": "#3aa8e4",
-                    "from": [116.404844, 39.91405],
-                    "to": [126.1445, 48.7156],
-                    "labels": ["北京", "黑龙江"],
-                    "value": 126.1445
-                }];
 
-            data = data.map(item => {
-                return {
-                    ...item,
-                    value: parseInt(Math.random() * 100)
-                }
-            });
-            var migrationLayer = L.migrationLayer({
-                map: lrmap,
-                data: data,
-                style: {
-                    pulse: {
-                        radius: 10,
-                        borderWidth: 3
-                    },
-                    arc: {
-                        width: 1,
-                        label: true,
-                    }
-                },
-                maxWidth: 10
-            });
-            migrationLayer.addTo(lrmap);
+    <div class="box">
+        <div class="map" id="map2"></div>
+        <div class="control">
+            <button onclick="rendomData()">rendomData</button>
+            <button onclick="rendomStyle()">rendomStyle</button>
+            <button onclick="show()">show</button>
+            <button onclick="hide()">hide</button>
 
-            window.remvoe = function() {
-                migrationLayer.destroy()
-            }
-        })();
-    </script>
+            <button onclick="add()">add</button>
+            <button onclick="remove()">remove</button>
+            <button onclick="destroy()">destroy</button>
+        </div>
+        <div class="popover"></div>
+    </div>
+
+    <script src="./index.js"></script>
+    <script src="./demo.js"></script>
 </body>
-
 </html>

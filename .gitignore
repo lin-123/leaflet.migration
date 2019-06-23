@@ -5,3 +5,4 @@
 .nyc_output
 node_modules
 docs
+dist

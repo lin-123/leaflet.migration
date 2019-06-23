@@ -2,7 +2,6 @@ const path = require('path');
 // const webpack = require('webpack');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-// const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 const webpackConfig = {
@@ -28,28 +27,20 @@ const webpackConfig = {
     publicPath: '/',
     libraryTarget: 'umd',
     library: 'VueGis3DBridge'
-  },
-  plugins: [
+  }
+};
+
+const env = process.env.NODE_ENV || 'dev';
+if (env === 'dev') {
+  webpackConfig.plugins = [
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: path.resolve(__dirname, 'public', 'index.html'),
       inject: true
     })
-    // copy custom static assets
-    // new CopyWebpackPlugin([
-    //   {
-    //     from: path.resolve(__dirname, 'public'),
-    //     to: path.resolve(__dirname, 'dist'),
-    //     ignore: ['.*']
-    //   }
-    // ])
-  ]
-};
-
-const env = process.env.NODE_ENV || 'dev';
-if (env === 'dev') {
+  ];
   webpackConfig.devServer = {
-    contentBase: path.join(__dirname, 'dist'),
+    contentBase: path.join(__dirname, 'public'),
     compress: true,
     open: true,
     port: 3000
