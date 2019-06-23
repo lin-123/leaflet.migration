@@ -35,7 +35,12 @@ map.remove(migrationLayer)
 
 ## API
 
-Data `[<MigrationData>]`
+Data
+type|description
+--|--
+`[<MigrationData>]`| migration data list
+
+MigrationData
 attribute|type|description
 --|--|--
 labels|`[<string>from, <string> to]`|label
@@ -44,12 +49,19 @@ from|`[<number>lat, <number>lng]`|to label latlng
 color|string|the color of each arc and pulse
 value|number|intense value of migration line
 
-Options
+Options|Style
 option|type|default|description
 --|--|--|--
 pulseRadius|number|10|pulse max radius, pulse radius from 3 to this value
 arcWidth|number|1|arc border width
 label|boolean|true|set it to false if you don't want show label
+
+Options|EventHandler
+method|returns|description
+--|--|--
+replacePopover(`<pixel>x`, `<pixel>y`, `<MigrationData>data`, `<integer>index`)|Element|replace default popover by return element
+onShowPopover(`<MigrationData>data`, `<integer>index`)|none|called on mouse hover pulse
+onHidePopover(`<integer>index`)|none|called on mouse leave pulse
 
 Methods
 method|returns|descrition
@@ -77,6 +89,8 @@ onRemove(`<Map> map`)|this|called on map.remove(migrationLayer)
 - [x] accomplish setData/setStyle
 - [x] accomplish addTo and remove function
 - [x] update init options
+- [x] add demo to gh-pages
+- [x] customize popover
 
 ### 1.1.0
 - [x] update return value of new MigrationLayer()

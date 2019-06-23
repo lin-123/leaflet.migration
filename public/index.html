@@ -50,11 +50,18 @@
             top: 0;
             right: 0;
         }
+        .popover {
+            background: black;
+            color: white;
+            font-size: 24px;
+        }
     </style>
 </head>
 
 <body>
-    <div id="map"></div>
+    <div id="map">
+        <div class="popover"></div>
+    </div>
     <div class="control">
         <button onclick="rendomData()">rendomData</button>
         <button onclick="rendomStyle()">rendomStyle</button>
@@ -111,12 +118,25 @@
                     "labels": ["北京", "黑龙江"],
                     "value": 126.1445
                 }];
-            var style = {
+
+            var popover = document.querySelector('.popover');
+            var options = {
                 pulseRadius: 10,
                 arcWidth: 1,
                 label: true,
+                replacePopover: function(x, y, data, index) {
+                    console.log(x, y, data, index, 'show popover');
+                    popover.innerHTML = 'value:' + data.value + '\nfrom:' + data.labels[0] + '\nto:' + data.labels[1]
+                    return popover;
+                },
+                onShowPopover: function(x, y, data, index) {
+                    console.log(x, y, data, index, 'show popover');
+                },
+                oHidePopover: function(index) {
+                    console.log('hide popover', index);
+                }
             };
-            var migrationLayer = L.migrationLayer(data, style);
+            var migrationLayer = L.migrationLayer(data, options);
             var layer = migrationLayer.addTo(lrmap);
             window.rendomData = function() {
                 data = data.map(item => {

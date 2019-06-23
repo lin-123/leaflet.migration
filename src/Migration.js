@@ -4,6 +4,7 @@ import Pulse from './Pulse';
 import Spark from './Spark';
 import { extend } from './utils';
 import { STYLE } from './config';
+import Popover from './popver';
 
 const mergeStyle = (style) => {
   if (!style) return STYLE;
@@ -12,10 +13,14 @@ const mergeStyle = (style) => {
 };
 
 class Migration {
-  // options = { map, canvas, data, style, container }
-  constructor({ style, ...options }) {
+  // options = { map, canvas, data, options, container }
+  constructor({ options, container, ...otherOptions }) {
+    const {
+      replacePopover, onShowPopover, onHidePopover, ...style
+    } = options;
     Object.assign(this, {
-      ...options,
+      ...otherOptions,
+      container,
       style: mergeStyle(style),
       playAnimation: true,
       started: false,
@@ -25,6 +30,9 @@ class Migration {
         pulses: [],
         sparks: []
       }
+    });
+    this.popover = new Popover({
+      replacePopover, onShowPopover, onHidePopover, container
     });
     this.context = this.canvas.getContext('2d');
   }
@@ -51,13 +59,15 @@ class Migration {
 
     const dataRange = extend(data, i => i.value);
     const {
+      popover,
       container, style: {
         arcWidth, pulseRadius, label
       }
     } = this;
-    data.forEach(({
-      from, to, labels, color, value
-    }) => {
+    data.forEach((item, index) => {
+      const {
+        from, to, labels, color
+      } = item;
       const arc = new Line({
         startX: from[0],
         startY: from[1],
@@ -70,7 +80,7 @@ class Migration {
         x: to[0],
         y: to[1],
         rotation: arc.endAngle + Math.PI / 2,
-        style: 'arrow',
+        options: 'arrow',
         color,
         size: 4,
         borderWidth: 0,
@@ -83,7 +93,10 @@ class Migration {
         dataRange,
         radius: pulseRadius,
         zoom: this.map.getZoom(),
-        color, container, value, labels
+        container,
+        index,
+        data: item,
+        popover
       });
       const spark = new Spark({
         startX: from[0],

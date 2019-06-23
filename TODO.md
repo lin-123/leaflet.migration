@@ -1,16 +1,17 @@
 # TODO
-- [ ] add demo to gh-pages
-
-- [ ] 自定义 popover 样式
+- [ ] unit test
+- [ ] 建一个 单例 作为公共store
 - [ ] style, data 参数校验
 - [ ] export speed to config
 
 - [x] rewrite readme by leaflet plugin guide
 
 # way
-```
+```javascript
 {
-  popover: (labels, value) => el
+  // labels, value
+  onShowPopover: (x, y, labels, value) => {}
+  onHidePopover: ()
 }
 ```
 

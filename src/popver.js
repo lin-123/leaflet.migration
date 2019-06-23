@@ -1,32 +1,58 @@
+import { getType } from './utils';
+
 class Popover {
-  constructor() {
-    const el = document.createElement('div');
-    Object.assign(el.style, {
+  constructor({
+    onShowPopover, onHidePopover, container, replacePopover
+  }) {
+    // wrapper
+    this.el = L.DomUtil.create('div', '', container);
+    Object.assign(this.el.style, {
       position: 'absolute',
-      zIndex: '11',
       left: 0,
       top: 0,
-      border: '1px solid grey',
       display: 'none',
-      background: 'rgba(255,255,255,.3)',
-      borderRadius: '5px',
-      padding: '8px 16px'
+      zIndex: '11'
     });
-    this.el = el;
+    this.context = L.DomUtil.create('div', '', this.el);
+    if (getType(replacePopover) === 'Function') {
+      this.replace = replacePopover;
+    } else {
+      Object.assign(this.context.style, {
+        border: '1px solid grey',
+        background: 'rgba(255,255,255,.3)',
+        borderRadius: '5px',
+        padding: '8px 16px'
+      });
+    }
+    Object.assign(this, {
+      onShow: onShowPopover,
+      onHide: onHidePopover,
+    });
   }
 
-  show(x, y, value, labels) {
-    const { el } = this;
-    el.innerText = `${labels[1]}: ${value}`;
+  show(x, y, data, idx) {
+    const { value, labels } = data;
+    const { el, replace, onShow } = this;
+    if (replace) {
+      const popover = replace(x, y, data, idx);
+      // el.appendChild(popover);
+      el.replaceChild(popover, el.children[0]);
+    } else {
+      this.context.innerText = `${labels[0]} -> ${labels[1]}: ${value}`;
+    }
+    if (getType(onShow) === 'Function') onShow(data, idx);
+
     Object.assign(el.style, {
       display: '',
       transform: `translate(${x}px, ${y}px)`,
     });
   }
 
-  hide() {
-    this.el.style.display = 'none';
+  hide(idx) {
+    const { el, onHide } = this;
+    if (getType(onHide) === 'Function') onHide(data, idx);
+    el.style.display = 'none';
   }
 }
 
-export default new Popover();
+export default Popover;

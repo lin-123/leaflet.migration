@@ -1,15 +1,15 @@
 // 脉冲， label 圆环扩散
-import popover from './popver';
 
 const domCache = [];
 const MIN_RADIUS = 3;
 
 class Pulse {
   constructor({
-    x, y, color, container, value, labels, dataRange, zoom,
+    x, y, container, dataRange, zoom, data, index, popover,
     // user config radius
     radius,
   }) {
+    const { color, value, labels } = data;
     // 根据用户设置的 radius, data[x].value, zoom 来决定半径
     const minRadius = radius / 2;
     const [, max] = dataRange;
@@ -28,9 +28,9 @@ class Pulse {
     });
     this.showPopover = (e) => {
       const { clientX, clientY } = e;
-      popover.show(clientX, clientY, value, labels);
+      popover.show(clientX, clientY, data, index);
     };
-    this.hidPopover = popover.hide.bind(popover);
+    this.hidPopover = () => popover.hide(index);
     this.initDom();
   }
 

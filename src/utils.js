@@ -44,3 +44,7 @@ export function extend(arr, handler) {
   });
   return [min, max];
 }
+
+export function getType(target) {
+  return Object.prototype.toString.call(target).slice(8, -1);
+}
