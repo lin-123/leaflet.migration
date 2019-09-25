@@ -15,14 +15,15 @@ npm install -S leaflet.migration
 ## Usage
 
 ```javascript
-var data = [{
+import 'leflet.migration';
+const data = [{
   labels: ['from', 'to'],
   from: [lat, lng],
   to: [lat, lng],
   color: '',
   value: ''
 }];
-var migrationLayer = L.migrationLayer(data, {
+const migrationLayer = L.migrationLayer(data, {
   pulseRadius: 10,
   arcWidth: 1,
   label: true,
