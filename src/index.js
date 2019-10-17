@@ -19,7 +19,7 @@ L.MigrationLayer = L.Layer.extend({
     return this;
   },
   onRemove(map) {
-    this.mapHandles.forEach(({ type, handle }) => map.off(type, handle))
+    this.mapHandles.forEach(({ type, handle }) => map.off(type, handle));
     this.mapHandles = [];
     L.DomUtil.remove(this.container);
     this.migration.clear();
