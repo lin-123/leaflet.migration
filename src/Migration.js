@@ -1,4 +1,3 @@
-import Marker from './Marker';
 import Line from './Line';
 import Pulse from './Pulse';
 import Spark from './Spark';
@@ -27,7 +26,6 @@ class Migration {
       started: false,
       store: {
         arcs: [],
-        markers: [],
         pulses: [],
         sparks: []
       }
@@ -76,17 +74,6 @@ class Migration {
         endY: to[1],
         labels, label, width: arcWidth, color
       });
-      // 三角箭头
-      const marker = new Marker({
-        x: to[0],
-        y: to[1],
-        rotation: arc.endAngle + Math.PI / 2,
-        options: 'arrow',
-        color,
-        size: 4,
-        borderWidth: 0,
-        borderColor: color
-      });
       // 计算每一个圆环的大小
       let pulseOption = {
         x: to[0],
@@ -115,7 +102,6 @@ class Migration {
       });
 
       this.store.arcs.push(arc);
-      this.store.markers.push(marker);
       this.store.pulses.push(pulse);
       this.store.sparks.push(spark);
     });
@@ -127,7 +113,6 @@ class Migration {
     this.store.pulses.forEach(pulse => pulse.clear());
     this.store = {
       arcs: [],
-      markers: [],
       pulses: [],
       sparks: []
     };

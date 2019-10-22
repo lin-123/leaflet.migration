@@ -29,7 +29,7 @@ class Spark extends Arc {
       x: 50,
       y: 80,
       rotation: 50 * Math.PI / 180,
-      style: 'arrow',
+      style: 'circle',
       color: 'rgb(255, 255, 255)',
       size: 3,
       borderWidth: 0,

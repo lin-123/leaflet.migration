@@ -92,6 +92,9 @@ onRemove(`<Map> map`)|this|called on map.remove(migrationLayer)
 - open http://localhost:3000
 
 ## feature list
+### 2.0.1
+- [x] fix spark cannot move
+
 ### 2.0.0
 - [x] accomplish setData/setStyle
 - [x] accomplish addTo and remove function

@@ -7,4 +7,6 @@ export const STYLE = {
   pulseRadius: 10,
   arcWidth: 1,
   label: true,
+  // arrow|circle|imgUrl
+  marker: 'arrow'
 };
