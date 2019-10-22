@@ -42,6 +42,165 @@ var data = [{
   "value": 126.1445
 }];
 
+var inData = [{
+  color: 'rgba(251,176,49,0.8)',
+  from: [113.2672, 23.1122],
+  to: [116.404844, 39.91405],
+  labels: ['广东', '北京'],
+  value: 3000,
+},
+{
+  color: 'rgba(251,176,49,0.8)',
+  from: [119.312795, 26.084276],
+  to: [116.404844, 39.91405],
+  labels: ['福建', '北京'],
+  value: 180,
+}, {
+  color: 'rgba(251,176,49,0.8)',
+  from: [120.20553, 30.257824],
+  to: [116.404844, 39.91405],
+  labels: ['浙江', '北京'],
+  value: 240,
+}, {
+  color: 'rgba(251,176,49,0.8)',
+  from: [121.475941, 31.235682],
+  to: [116.404844, 39.91405],
+  labels: ['上海', '北京'],
+  value: 2000,
+}, {
+  color: 'rgba(251,176,49,0.8)',
+  from: [117.114254, 36.655635],
+  to: [116.404844, 39.91405],
+  labels: ['山东', '北京'],
+  value: 1350,
+}, {
+  color: 'rgba(251,176,49,0.8)',
+  from: [113.632324, 34.747276],
+  to: [116.404844, 39.91405],
+  labels: ['河南', '北京'],
+  value: 220,
+}, {
+  color: 'rgba(251,176,49,0.8)',
+  from: [106.550388, 29.565729],
+  to: [116.404844, 39.91405],
+  labels: ['重庆', '北京'],
+  value: 250,
+}, {
+  color: 'rgba(251,176,49,0.8)',
+  from: [103.857196, 36.072701],
+  to: [116.404844, 39.91405],
+  labels: ['甘肃', '北京'],
+  value: 170,
+}, {
+  color: 'rgba(251,176,49,0.8)',
+  from: [102.741716, 25.070154],
+  to: [116.404844, 39.91405],
+  labels: ['云南', '北京'],
+  value: 120,
+}, {
+  color: 'rgba(251,176,49,0.8)',
+  from: [106.246635, 38.48795],
+  to: [116.404844, 39.91405],
+  labels: ['宁夏', '北京'],
+  value: 100,
+}, {
+  color: 'rgba(251,176,49,0.8)',
+  from: [113.072967, 28.144518],
+  to: [116.404844, 39.91405],
+  labels: ['湖南', '北京'],
+  value: 230,
+}, {
+  color: 'rgba(251,176,49,0.8)',
+  from: [114.292676, 30.600104],
+  to: [116.404844, 39.91405],
+  labels: ['湖北', '北京'],
+  value: 240,
+}, {
+  color: 'rgba(251,176,49,0.8)',
+  from: [106.662156, 26.644077],
+  to: [116.404844, 39.91405],
+  labels: ['贵州', '北京'],
+  value: 200,
+}, {
+  color: 'rgba(251,176,49,0.8)',
+  from: [115.865978, 28.698674],
+  to: [116.404844, 39.91405],
+  labels: ['江西', '北京'],
+  value: 220,
+}, {
+  color: 'rgba(251,176,49,0.8)',
+  from: [117.239702, 31.819508],
+  to: [116.404844, 39.91405],
+  labels: ['安徽', '北京'],
+  value: 240,
+}, {
+  color: 'rgba(251,176,49,0.8)',
+  from: [118.801748, 32.060167],
+  to: [116.404844, 39.91405],
+  labels: ['江苏', '北京'],
+  value: 310,
+}, {
+  color: 'rgba(251,176,49,0.8)',
+  from: [114.520496, 38.044337],
+  to: [116.404844, 39.91405],
+  labels: ['河北', '北京'],
+  value: 260,
+}, {
+  color: 'rgba(251,176,49,0.8)',
+  from: [112.57455, 37.877325],
+  to: [116.404844, 39.91405],
+  labels: ['山西', '北京'],
+  value: 210,
+}, {
+  color: 'rgba(251,176,49,0.8)',
+  from: [108.944866, 34.340931],
+  to: [116.404844, 39.91405],
+  labels: ['陕西', '北京'],
+  value: 240,
+}, {
+  color: 'rgba(251,176,49,0.8)',
+  from: [123.436169, 41.820611],
+  to: [116.404844, 39.91405],
+  labels: ['辽宁', '北京'],
+  value: 200,
+}, {
+  color: 'rgba(251,176,49,0.8)',
+  from: [126.556784, 43.85168],
+  to: [116.404844, 39.91405],
+  labels: ['吉林', '北京'],
+  value: 200,
+}, {
+  color: 'rgba(251,176,49,0.8)',
+  from: [87.8695, 31.6846],
+  to: [116.404844, 39.91405],
+  labels: ['西藏', '北京'],
+  value: 75,
+}, {
+  color: 'rgba(251,176,49,0.8)',
+  from: [112.5977, 41.3408],
+  to: [116.404844, 39.91405],
+  labels: ['内蒙古', '北京'],
+  value: 100,
+}, {
+  color: 'rgba(251,176,49,0.8)',
+  from: [95.2402, 35.4199],
+  to: [116.404844, 39.91405],
+  labels: ['青海', '北京'],
+  value: 95,
+}, {
+  color: 'rgba(251,176,49,0.8)',
+  from: [101.9199, 30.1904],
+  to: [116.404844, 39.91405],
+  labels: ['四川', '北京'],
+  value: 280,
+}, {
+  color: 'rgba(251,176,49,0.8)',
+  from: [126.1445, 48.7156],
+  to: [116.404844, 39.91405],
+  labels: ['黑龙江', '北京'],
+  value: 160,
+}]
+
 var popover = document.querySelector('.popover');
 var options = {
   pulseRadius: 10,
@@ -55,7 +214,7 @@ var options = {
   onShowPopover: function (x, y, data, index) {
     console.log(x, y, data, index, 'show popover');
   },
-  oHidePopover: function (index) {
+  onHidePopover: function (index) {
     console.log('hide popover', index);
   }
 };
@@ -86,4 +245,10 @@ window.show = function () {
 }
 window.hide = function () {
   migrationLayer.hide()
+}
+window.changeDirection = function () {
+  lrmap.removeLayer(layer)
+  options = Object.assign(options, { direction: 'in' });
+  migrationLayer = L.migrationLayer(inData, options)
+  layer = migrationLayer.addTo(lrmap)
 }

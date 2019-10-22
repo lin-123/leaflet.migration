@@ -16,10 +16,11 @@ class Migration {
   // options = { map, canvas, data, options, container }
   constructor({ options, container, ...otherOptions }) {
     const {
-      replacePopover, onShowPopover, onHidePopover, ...style
+      replacePopover, onShowPopover, onHidePopover, direction, ...style
     } = options;
     Object.assign(this, {
       ...otherOptions,
+      direction,
       container,
       style: mergeStyle(style),
       playAnimation: true,
@@ -51,7 +52,7 @@ class Migration {
    * 更新数据
    */
   refresh() {
-    const { data } = this;
+    const { data, direction } = this;
     if (!data || data.length === 0) {
       return;
     }
@@ -87,7 +88,7 @@ class Migration {
         borderColor: color
       });
       // 计算每一个圆环的大小
-      const pulse = new Pulse({
+      let pulseOption = {
         x: to[0],
         y: to[1],
         dataRange,
@@ -97,7 +98,11 @@ class Migration {
         index,
         data: item,
         popover
-      });
+      };
+      if (direction === 'in') {
+        pulseOption = Object.assign(pulseOption, { x: from[0], y: from[1] });
+      }
+      const pulse = new Pulse(pulseOption);
       const spark = new Spark({
         startX: from[0],
         startY: from[1],
@@ -106,6 +111,7 @@ class Migration {
         width: 15,
         // width: value,
         color,
+        direction
       });
 
       this.store.arcs.push(arc);

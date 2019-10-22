@@ -30,14 +30,14 @@ class Pulse {
       const { clientX, clientY } = e;
       popover.show(clientX, clientY, data, index);
     };
-    this.hidPopover = () => popover.hide(index);
+    this.hidePopover = () => popover.hide(index);
     this.initDom();
   }
 
   clear() {
     domCache.push(this.pulse);
     this.pulse.removeEventListener('mouseover', this.showPopover);
-    this.pulse.removeEventListener('mouseout', this.hidPopover);
+    this.pulse.removeEventListener('mouseout', this.hidePopover);
     this.container.removeChild(this.pulse);
   }
 
@@ -78,7 +78,7 @@ class Pulse {
     this.container.appendChild(pulse);
 
     this.pulse.addEventListener('mouseover', this.showPopover);
-    this.pulse.addEventListener('mouseout', this.hidPopover);
+    this.pulse.addEventListener('mouseout', this.hidePopover);
   }
 
   draw() {

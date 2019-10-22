@@ -9,6 +9,7 @@ L.MigrationLayer = L.Layer.extend({
     });
 
     this._show = true;
+    this.mapHandles = [];
   },
   onAdd(map) {
     this._map = map;
@@ -18,10 +19,10 @@ L.MigrationLayer = L.Layer.extend({
     return this;
   },
   onRemove(map) {
-    L.DomUtil.remove(this.container);
-    map.clearAllEventListeners();
-    this.migration.clear();
+    this.mapHandles.forEach(({ type, handle }) => map.off(type, handle));
     this.mapHandles = [];
+    L.DomUtil.remove(this.container);
+    this.migration.clear();
     return this;
   },
   setData(data) {
@@ -74,27 +75,36 @@ L.MigrationLayer = L.Layer.extend({
     });
   },
   _bindMapEvents() {
-    this._map.on('moveend', (e) => {
+    const self = this;
+    function moveendHandle(e) {
       const zoom = e.target.getZoom();
       if (zoom < MIN_ZOOM) {
-        this.hide();
+        self.hide();
         return;
       }
-      if (!this._show) {
-        this.show();
+      if (!self._show) {
+        self.show();
       }
-      this.migration.play();
-      this._draw();
-    });
-    this._map.on('zoomstart ', () => {
-      this.container.style.display = 'none';
-    });
-    this._map.on('zoomend', () => {
-      if (this._show) {
-        this.container.style.display = '';
-        this._draw();
+      self.migration.play();
+      self._draw();
+    }
+    self._map.on('moveend', moveendHandle);
+    self.mapHandles.push({ type: 'moveend', handle: moveendHandle });
+
+    function zoomstartHandle() {
+      self.container.style.display = 'none';
+    }
+    self._map.on('zoomstart ', zoomstartHandle);
+    self.mapHandles.push({ type: 'zoomstart', handle: zoomstartHandle });
+
+    function zoomendHandle() {
+      if (self._show) {
+        self.container.style.display = '';
+        self._draw();
       }
-    });
+    }
+    self._map.on('zoomend', zoomendHandle);
+    self.mapHandles.push({ type: 'zoomend', handle: zoomendHandle });
   },
   _draw() {
     const bounds = this._map.getBounds();
@@ -106,7 +116,7 @@ L.MigrationLayer = L.Layer.extend({
   _convertData() {
     const { _map, _data } = this;
     const bounds = _map.getBounds();
-    if (_data && bounds) {
+    if (_data && Array.isArray(_data) && _data.length > 0 && bounds) {
       const getLatLng = ([lng, lat]) => {
         const { x, y } = _map.latLngToContainerPoint(new L.LatLng(lat, lng));
         return [x, y];
