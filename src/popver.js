@@ -8,8 +8,8 @@ class Popover {
     this.el = L.DomUtil.create('div', '', container);
     Object.assign(this.el.style, {
       position: 'absolute',
-      left: '-100px',
-      top: '-80px',
+      left: '0',
+      top: '0',
       display: 'none',
       zIndex: '11'
     });

@@ -61,7 +61,6 @@ L.MigrationLayer = L.Layer.extend({
       position: 'absolute',
       width: `${x}px`,
       height: `${y}px`,
-      zIndex: 99999999
     });
     const canvas = document.createElement('canvas');
     this.canvas = canvas;
