@@ -92,6 +92,9 @@ onRemove(`<Map> map`)|this|called on map.remove(migrationLayer)
 - open http://localhost:3000
 
 ## feature list
+### 2.0.4
+- [x] fix spark not work when Math.abs(startAngle - endAngle) > Math.PI
+
 ### 2.0.1
 - [x] fix spark cannot move
 
