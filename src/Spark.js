@@ -12,16 +12,10 @@ class Spark extends Arc {
     this.trailAngle = this.startAngle;
     this.arcAngle = this.startAngle;
     // 是否有阴影
-    // this.animateBlur = true;
 
-    // 保证Spark的弧度不超过Math.PI
-    if (this.startAngle * this.endAngle < 0) {
-      if (this.startAngle < 0) {
-        this.startAngle += Math.PI * 2;
-        this.endAngle += Math.PI * 2;
-      } else {
-        this.endAngle += Math.PI * 2;
-      }
+    // this.animateBlur = true;
+    if (Math.abs(this.startAngle - this.endAngle) > Math.PI) {
+      this.endAngle += Math.PI * 2;
     }
 
     this.marker = new Marker({
