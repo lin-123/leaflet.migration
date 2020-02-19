@@ -1,4 +1,5 @@
 // 脉冲， label 圆环扩散
+import store from './store';
 
 const domCache = [];
 const MIN_RADIUS = 3;
@@ -27,8 +28,9 @@ class Pulse {
       scale: 1
     });
     this.showPopover = (e) => {
+      const { top, left } = store.mapPosi;
       const { clientX, clientY } = e;
-      popover.show(clientX, clientY, data, index);
+      popover.show(clientX - left, clientY - top, data, index);
     };
     this.hidePopover = () => popover.hide(index);
     this.initDom();

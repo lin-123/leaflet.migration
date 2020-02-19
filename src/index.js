@@ -1,5 +1,6 @@
 import Migration from './Migration';
 import { MIN_ZOOM } from './config';
+import store from './store';
 
 L.MigrationLayer = L.Layer.extend({
   initialize(_data = [], options) {
@@ -66,6 +67,7 @@ L.MigrationLayer = L.Layer.extend({
     this.canvas = canvas;
     container.appendChild(canvas);
     this._map.getPanes().overlayPane.appendChild(container);
+    store.init({ container });
     this.migration = new Migration({
       canvas,
       container,

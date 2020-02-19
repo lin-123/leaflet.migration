@@ -1,4 +1,5 @@
 import { getType } from './utils';
+import { POPOVER_OFFSET } from './config';
 
 class Popover {
   constructor({
@@ -44,7 +45,7 @@ class Popover {
 
     Object.assign(el.style, {
       display: '',
-      transform: `translate(${x}px, ${y}px)`,
+      transform: `translate(${x + POPOVER_OFFSET}px, ${y + POPOVER_OFFSET}px)`,
     });
   }
 

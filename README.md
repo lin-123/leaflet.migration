@@ -92,6 +92,10 @@ onRemove(`<Map> map`)|this|called on map.remove(migrationLayer)
 - open http://localhost:3000
 
 ## feature list
+### 2.0.5
+- [x] fix bug: popover 由于 map 元素相对页面左上角的偏移而出现偏移 label 元素较远
+
+
 ### 2.0.4
 - [x] fix spark not work when Math.abs(startAngle - endAngle) > Math.PI
 

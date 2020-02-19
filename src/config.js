@@ -10,3 +10,5 @@ export const STYLE = {
   // arrow|circle|imgUrl
   marker: 'arrow'
 };
+
+export const POPOVER_OFFSET = 12;
