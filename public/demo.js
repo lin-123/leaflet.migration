@@ -5,37 +5,37 @@ L.tileLayer('http://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale
   subdomains: ["1", "2", "3", "4"]
 }).addTo(lrmap);
 var data = [{
-  "color": "#ff0000",
+  "color": "rgb(101, 169, 249)",
   "from": [116.404844, 39.91405],
   "to": [84.9023, 42.148],
   "labels": ["北京", "新疆"],
-  "value": 84.9023
+  "value": 8
 }, {
-  "color": "green",
+  "color": "rgb(101, 169, 249)",
   "from": [116.404844, 39.91405],
   "to": [87.8695, 31.6846],
   "labels": ["北京", "西藏"],
-  "value": 87.8695
+  "value": 30
 }, {
-  "color": "green",
+  "color": "rgb(101, 169, 249)",
   "from": [116.404844, 39.91405],
   "to": [112.5977, 41.3408],
   "labels": ["北京", "内蒙古"],
   "value": 112.5977
 }, {
-  "color": "green",
+  "color": "#1EBCA1",
   "from": [116.404844, 39.91405],
   "to": [95.2402, 35.4199],
   "labels": ["北京", "青海"],
   "value": 95.2402
 }, {
-  "color": "green",
+  "color": "#1EBCA1",
   "from": [116.404844, 39.91405],
   "to": [101.9199, 30.1904],
   "labels": ["北京", "四川"],
   "value": 1.9199
 }, {
-  "color": "green",
+  "color": "#1EBCA1",
   "from": [116.404844, 39.91405],
   "to": [126.1445, 48.7156],
   "labels": ["北京", "黑龙江"],
@@ -203,8 +203,9 @@ var inData = [{
 
 var popover = document.querySelector('.popover');
 var options = {
-  pulseRadius: 10,
-  arcWidth: 1,
+  minRadius: 5,
+  maxRadius: 10,
+  arcWidth: 0.1,
   label: true,
   replacePopover: function (x, y, data, index) {
     console.log(x, y, data, index, 'show popover');
@@ -218,7 +219,7 @@ var options = {
     console.log('hide popover', index);
   }
 };
-var migrationLayer = L.migrationLayer(data, options);
+var migrationLayer = L.migrationLayer(data.map(i => Object.assign(i, {  })), options);
 var layer = migrationLayer.addTo(lrmap);
 window.rendomData = function () {
   data = data.map(item => {

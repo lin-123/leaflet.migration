@@ -23,12 +23,24 @@ const data = [{
   color: '',
   value: ''
 }];
-const migrationLayer = L.migrationLayer(data, {
-  pulseRadius: 10,
-  arcWidth: 1,
+var options = {
+  minRadius: 3,
+  maxRadius: 3,
+  arcWidth: 0.001,
   label: true,
-}).addTo(map);
-
+  replacePopover: function (x, y, data, index) {
+    console.log(x, y, data, index, 'show popover');
+    popover.innerHTML = 'value:' + data.value + '\nfrom:' + data.labels[1] + '\nto:' + data.labels[0]
+    return popover;
+  },
+  onShowPopover: function (x, y, data, index) {
+    console.log(x, y, data, index, 'show popover');
+  },
+  onHidePopover: function (index) {
+    console.log('hide popover', index);
+  }
+};
+var migrationLayer = L.migrationLayer(data.map(i => Object.assign(i, {  })), options);
 migrationLayer.setStyle({ pulse: { radius: 20 }})
 migrationLayer.setData([])
 map.remove(migrationLayer)
@@ -56,7 +68,8 @@ Options|Style
 
 option|type|default|description
 --|--|--|--
-pulseRadius|number|10|pulse max radius, pulse radius from 3 to this value
+minRadius|number|5|pulse min radius
+maxRadius|number|2*minRadius|pulse max radius
 arcWidth|number|1|arc border width
 label|boolean|true|set it to false if you don't want show label
 
@@ -92,6 +105,9 @@ onRemove(`<Map> map`)|this|called on map.remove(migrationLayer)
 - open http://localhost:3000
 
 ## feature list
+### 2.1.0
+- [x] 更新 option 参数， 原 pulseRadius 改成 minRadius, maxRadius；
+
 ### 2.0.5
 - [x] fix bug: popover 由于 map 元素相对页面左上角的偏移而出现偏移 label 元素较远
 

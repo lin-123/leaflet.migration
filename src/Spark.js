@@ -58,7 +58,8 @@ class Spark extends Arc {
     }
     this.trailAngle = angle;
     this.drawArc(
-      context, strokeColor, this.lineWidth, this.startAngle, this.arcAngle
+      // this.lineWidth from 圆的半径
+      context, strokeColor, 2 * this.lineWidth, this.startAngle, this.arcAngle
     );
 
     // 拖尾效果
@@ -68,7 +69,8 @@ class Spark extends Arc {
       const tailLineWidth = 5;
       if (trailAngle - deltaAngle * i > this.startAngle) {
         this.drawArc(
-          context, arcColor,
+          context,
+          arcColor,
           tailLineWidth - tailLineWidth / count * i,
           trailAngle - deltaAngle * i,
           trailAngle

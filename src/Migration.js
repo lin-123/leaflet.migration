@@ -1,3 +1,4 @@
+import linearScale from 'uc-fun/lib/linearScale';
 import Line from './Line';
 import Pulse from './Pulse';
 import Spark from './Spark';
@@ -60,9 +61,10 @@ class Migration {
     const {
       popover,
       container, style: {
-        arcWidth, pulseRadius, label
+        arcWidth, minRadius, label, maxRadius
       }
     } = this;
+    const radiusScale = linearScale(dataRange, [minRadius, maxRadius || 2 * minRadius]);
     data.forEach((item, index) => {
       const {
         from, to, labels, color
@@ -74,13 +76,15 @@ class Migration {
         endY: to[1],
         labels, label, width: arcWidth, color
       });
+      // const zoom = this.map.getZoom();
+      const radius = radiusScale(item.value);
       // 计算每一个圆环的大小
       let pulseOption = {
         x: to[0],
         y: to[1],
         dataRange,
-        radius: pulseRadius,
-        zoom: this.map.getZoom(),
+        radius,
+        maxRadius,
         container,
         index,
         data: item,
@@ -89,14 +93,14 @@ class Migration {
       if (direction === 'in') {
         pulseOption = Object.assign(pulseOption, { x: from[0], y: from[1] });
       }
+      // 圆环脉冲
       const pulse = new Pulse(pulseOption);
       const spark = new Spark({
         startX: from[0],
         startY: from[1],
         endX: to[0],
         endY: to[1],
-        width: 15,
-        // width: value,
+        width: minRadius,
         color,
         direction
       });
