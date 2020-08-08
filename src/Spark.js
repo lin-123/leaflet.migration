@@ -5,7 +5,7 @@ import Marker from './Marker';
 class Spark extends Arc {
   constructor(options) {
     super(options);
-    this.tailPointsCount = 50; // 拖尾点数
+    this.tailPointsCount = 10; // 拖尾点数
     // 飞线速度
     this.factor = 2 / this.radius;
     this.deltaAngle = (80 / Math.min(this.radius, 400)) / this.tailPointsCount;
@@ -31,19 +31,17 @@ class Spark extends Arc {
   }
 
   drawArc(context, strokeColor, lineWidth, startAngle, endAngle) {
-    // context.save();
     Object.assign(context, {
       lineWidth,
       strokeStyle: strokeColor,
       shadowColor: strokeColor,
       lineCap: 'round'
     });
-    // context.beginPath();
+    context.beginPath();
     context.arc(
       this.centerX, this.centerY, this.radius, startAngle, endAngle, false
     );
-    // context.stroke();
-    // context.restore();
+    context.stroke();
   }
 
   draw(context) {

@@ -104,10 +104,15 @@ onRemove(`<Map> map`)|this|called on map.remove(migrationLayer)
 - web server will listen on 3000
 - open http://localhost:3000
 
-## feature list
+## TODO
 ### 2.2.0
 - [] 渲染性能优化， 可以支持上万个点同时运动
   - 提前把各个扫尾的点的下一个位置计算好， 然后调用 canvas redraw
+
+
+## feature list
+### 2.1.1
+- [] 渲染性能优化
 ### 2.1.0
 - [x] 更新 option 参数， 原 pulseRadius 改成 minRadius, maxRadius；
 

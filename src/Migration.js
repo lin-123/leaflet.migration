@@ -139,16 +139,14 @@ class Migration {
       started, store, context, canvas: { width, height }
     } = this;
     if (!started) {
-      context.clearRect(0, 0, width, height);
-      // this.draw(store.arcs);
-      // this.draw(store.pulses);
+      this.draw(store.pulses);
       const drawFrame = () => {
         this.requestAnimationId = window.requestAnimationFrame(drawFrame);
         if (this.playAnimation) {
           context.clearRect(0, 0, width, height);
           // context.save();
           this.draw(store.arcs);
-          this.draw(store.pulses);
+          // this.draw(store.pulses);
           // context.beginPath();
           this.draw(store.sparks);
           // context.stroke();
