@@ -3,7 +3,6 @@ class Marker {
   constructor(options) {
     this.x = options.x;
     this.y = options.y;
-    this.rotation = options.rotation;
     this.style = options.style;
     this.color = options.color;
     this.size = options.size;
@@ -12,9 +11,7 @@ class Marker {
   }
 
   draw(context) {
-    context.save();
     context.translate(this.x, this.y);
-    context.rotate(this.rotation);
     Object.assign(context, {
       lineWidth: this.borderWidth || 0,
       strokeStyle: this.borderColor || '#000',
@@ -35,7 +32,6 @@ class Marker {
     context.closePath();
     context.stroke();
     context.fill();
-    context.restore();
   }
 }
 

@@ -14,7 +14,6 @@ class Line extends Arc {
   }
 
   draw(context) {
-    context.save();
     Object.assign(context, {
       lineWidth: this.lineWidth,
       strokeStyle: this.color,
@@ -31,8 +30,6 @@ class Line extends Arc {
       false
     );
     context.stroke();
-    context.restore();
-    context.save();
 
     if (this.label) {
       const [startLabel, endLabel] = this.labels;
@@ -48,7 +45,6 @@ class Line extends Arc {
         context.fillText(endLabel, x, y);
       }
     }
-    context.restore();
   }
 }
 
