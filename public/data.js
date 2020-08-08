@@ -3,9 +3,9 @@
     lng: 106,
     lat: 30
   };
-  window.data = new Array(2000).fill().map((i, idx) => {
+  window.data = new Array(500).fill().map((i, idx) => {
     const latOffset = (Math.random() - 0.5) * 60;
-    const lngOffset = (Math.random() - 0.5) * 300;
+    const lngOffset = (Math.random() - 0.5) * 50;
     return {
       "color": "#1EBCA1",
       "from": [center.lng + lngOffset, center.lat + latOffset],

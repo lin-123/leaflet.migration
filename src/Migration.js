@@ -140,17 +140,19 @@ class Migration {
     } = this;
     if (!started) {
       context.clearRect(0, 0, width, height);
-      this.draw(store.arcs);
-      this.draw(store.pulses);
+      // this.draw(store.arcs);
+      // this.draw(store.pulses);
       const drawFrame = () => {
         this.requestAnimationId = window.requestAnimationFrame(drawFrame);
         if (this.playAnimation) {
           context.clearRect(0, 0, width, height);
-          context.save();
+          // context.save();
+          this.draw(store.arcs);
+          this.draw(store.pulses);
           // context.beginPath();
           this.draw(store.sparks);
           // context.stroke();
-          context.restore();
+          // context.restore();
         }
       };
       drawFrame();
