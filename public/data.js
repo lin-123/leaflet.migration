@@ -1,0 +1,17 @@
+(function() {
+  const center = {
+    lng: 106,
+    lat: 30
+  };
+  window.data = new Array(2000).fill().map((i, idx) => {
+    const latOffset = (Math.random() - 0.5) * 60;
+    const lngOffset = (Math.random() - 0.5) * 300;
+    return {
+      "color": "#1EBCA1",
+      "from": [center.lng + lngOffset, center.lat + latOffset],
+      "to": [center.lng, center.lat],
+      "labels": [`from-${idx}`, `to`],
+      "value": 10 + 10 * (idx % 10) * Math.random()
+    };
+  });
+})()

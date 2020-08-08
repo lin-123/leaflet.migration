@@ -7,7 +7,7 @@ class Spark extends Arc {
     super(options);
     this.tailPointsCount = 50; // 拖尾点数
     // 飞线速度
-    this.factor = 1 / this.radius;
+    this.factor = 2 / this.radius;
     this.deltaAngle = (80 / Math.min(this.radius, 400)) / this.tailPointsCount;
     this.trailAngle = this.startAngle;
     this.arcAngle = this.startAngle;
@@ -31,19 +31,19 @@ class Spark extends Arc {
   }
 
   drawArc(context, strokeColor, lineWidth, startAngle, endAngle) {
-    context.save();
+    // context.save();
     Object.assign(context, {
       lineWidth,
       strokeStyle: strokeColor,
       shadowColor: strokeColor,
       lineCap: 'round'
     });
-    context.beginPath();
+    // context.beginPath();
     context.arc(
       this.centerX, this.centerY, this.radius, startAngle, endAngle, false
     );
-    context.stroke();
-    context.restore();
+    // context.stroke();
+    // context.restore();
   }
 
   draw(context) {
@@ -57,6 +57,7 @@ class Spark extends Arc {
       this.arcAngle = angle;
     }
     this.trailAngle = angle;
+    context.beginPath();
     this.drawArc(
       // this.lineWidth from 圆的半径
       context, strokeColor, 2 * this.lineWidth, this.startAngle, this.arcAngle
@@ -77,12 +78,12 @@ class Spark extends Arc {
         );
       }
     }
+    context.stroke();
 
     context.save();
     context.translate(this.centerX, this.centerY);
     this.marker.x = Math.cos(this.trailAngle) * this.radius;
     this.marker.y = Math.sin(this.trailAngle) * this.radius;
-    this.marker.rotation = this.trailAngle + Math.PI / 2;
     this.marker.draw(context);
     context.restore();
 

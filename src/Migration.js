@@ -127,23 +127,30 @@ class Migration {
     window.cancelAnimationFrame(this.requestAnimationId);
   }
 
+  draw(shapes) {
+    const { context } = this;
+    shapes.forEach(shap => shap.draw(context));
+    for (let i = 0, len = shapes.length; i < len; i++) {
+      shapes[i].draw(context);
+    }
+  }
   start() {
     const {
       started, store, context, canvas: { width, height }
     } = this;
     if (!started) {
+      context.clearRect(0, 0, width, height);
+      this.draw(store.arcs);
+      this.draw(store.pulses);
       const drawFrame = () => {
         this.requestAnimationId = window.requestAnimationFrame(drawFrame);
         if (this.playAnimation) {
-          // canvas 重绘
           context.clearRect(0, 0, width, height);
-          Object.keys(store).forEach((key) => {
-            const shapes = store[key];
-            shapes.forEach(shap => shap.draw(context));
-            for (let i = 0, len = shapes.length; i < len; i++) {
-              shapes[i].draw(context);
-            }
-          });
+          context.save();
+          // context.beginPath();
+          this.draw(store.sparks);
+          // context.stroke();
+          context.restore();
         }
       };
       drawFrame();
