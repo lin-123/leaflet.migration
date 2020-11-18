@@ -1,6 +1,6 @@
 #!/bin/bash
 
-npm update
+# npm update
 
 VERSION=$(node --eval "console.log(require('./package.json').version);")
 
