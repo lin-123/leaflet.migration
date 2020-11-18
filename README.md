@@ -28,6 +28,7 @@ var options = {
   maxRadius: 3,
   arcWidth: 0.001,
   label: true,
+  order: true,
   replacePopover: function (x, y, data, index) {
     console.log(x, y, data, index, 'show popover');
     popover.innerHTML = 'value:' + data.value + '\nfrom:' + data.labels[1] + '\nto:' + data.labels[0]
@@ -72,6 +73,7 @@ minRadius|number|5|pulse min radius
 maxRadius|number|2*minRadius|pulse max radius
 arcWidth|number|1|arc border width
 label|boolean|true|set it to false if you don't want show label
+order|boolean|false|Track animation sequence execution
 
 Options|EventHandler
 

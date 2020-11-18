@@ -46,7 +46,7 @@ class Spark extends Arc {
     context.restore();
   }
 
-  draw(context) {
+  draw(context,order) {
     const {
       endAngle, trailAngle, factor, color, deltaAngle
     } = this;
@@ -86,7 +86,7 @@ class Spark extends Arc {
     this.marker.draw(context);
     context.restore();
 
-    if ((endAngle - this.trailAngle) * 180 / Math.PI < 0.5) {
+    if (!order && (endAngle - this.trailAngle) * 180 / Math.PI < 0.5) {
       this.trailAngle = this.startAngle;
       this.animateBlur = false;
     }
