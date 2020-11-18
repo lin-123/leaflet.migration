@@ -16,12 +16,13 @@ class Migration {
   // options = { map, canvas, data, options, container }
   constructor({ options, container, ...otherOptions }) {
     const {
-      replacePopover, onShowPopover, onHidePopover, direction, ...style
+      replacePopover, onShowPopover, onHidePopover, direction, order, ...style
     } = options;
     Object.assign(this, {
       ...otherOptions,
       direction,
       container,
+      order:order || false,
       style: mergeStyle(style),
       playAnimation: true,
       started: false,
@@ -66,6 +67,7 @@ class Migration {
     } = this;
     const radiusScale = linearScale(dataRange, [minRadius, maxRadius || 2 * minRadius]);
     data.forEach((item, index) => {
+      // console.log('item',item);
       const {
         from, to, labels, color
       } = item;
@@ -108,6 +110,8 @@ class Migration {
       this.store.arcs.push(arc);
       this.store.pulses.push(pulse);
       this.store.sparks.push(spark);
+
+      this.index = 0;
     });
 
     this.start();
@@ -136,7 +140,7 @@ class Migration {
   }
   start() {
     const {
-      started, store, context, canvas: { width, height }
+      started, store, context, canvas: { width, height } , order
     } = this;
     if (!started) {
       this.draw(store.pulses);
@@ -144,13 +148,24 @@ class Migration {
         this.requestAnimationId = window.requestAnimationFrame(drawFrame);
         if (this.playAnimation) {
           context.clearRect(0, 0, width, height);
-          // context.save();
-          this.draw(store.arcs);
-          // this.draw(store.pulses);
-          // context.beginPath();
-          this.draw(store.sparks);
-          // context.stroke();
-          // context.restore();
+          Object.keys(store).forEach((key) => {
+            const shapes = store[key];
+            if(order && key === 'sparks'){
+              let item = shapes[this.index];
+              item.draw(context,order);
+              if((item.endAngle - item.trailAngle) * 180 / Math.PI < 0.5){
+                item.trailAngle = item.startAngle;
+                if(this.index < shapes.length - 1){
+                  this.index += 1;
+                }else{
+                  this.index = 0;
+                }
+              }
+            }else{
+              shapes.forEach(shap => shap.draw(context));
+            }
+
+          });
         }
       };
       drawFrame();

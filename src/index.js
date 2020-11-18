@@ -8,7 +8,6 @@ L.MigrationLayer = L.Layer.extend({
       _data,
       options
     });
-
     this._show = true;
     this.mapHandles = [];
   },
