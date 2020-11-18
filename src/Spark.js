@@ -44,7 +44,7 @@ class Spark extends Arc {
     context.stroke();
   }
 
-  draw(context,order) {
+  draw(context, order) {
     const {
       endAngle, trailAngle, factor, color, deltaAngle
     } = this;

@@ -22,7 +22,7 @@ class Migration {
       ...otherOptions,
       direction,
       container,
-      order:order || false,
+      order: order || false,
       style: mergeStyle(style),
       playAnimation: true,
       started: false,
@@ -138,9 +138,10 @@ class Migration {
       shapes[i].draw(context);
     }
   }
+
   start() {
     const {
-      started, store, context, canvas: { width, height } , order
+      started, store, context, canvas: { width, height }, order
     } = this;
     if (!started) {
       this.draw(store.pulses);
@@ -150,21 +151,20 @@ class Migration {
           context.clearRect(0, 0, width, height);
           Object.keys(store).forEach((key) => {
             const shapes = store[key];
-            if(order && key === 'sparks'){
-              let item = shapes[this.index];
-              item.draw(context,order);
-              if((item.endAngle - item.trailAngle) * 180 / Math.PI < 0.5){
+            if (order && key === 'sparks') {
+              const item = shapes[this.index];
+              item.draw(context, order);
+              if ((item.endAngle - item.trailAngle) * 180 / Math.PI < 0.5) {
                 item.trailAngle = item.startAngle;
-                if(this.index < shapes.length - 1){
+                if (this.index < shapes.length - 1) {
                   this.index += 1;
-                }else{
+                } else {
                   this.index = 0;
                 }
               }
-            }else{
+            } else {
               shapes.forEach(shap => shap.draw(context));
             }
-
           });
         }
       };
