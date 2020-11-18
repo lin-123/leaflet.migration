@@ -217,7 +217,7 @@ var options = {
   maxRadius: 10,
   arcWidth: 0.1,
   label: true,
-  order: true,
+  order: false,
   replacePopover: function (x, y, data, index) {
     console.log(x, y, data, index, 'show popover');
     popover.innerHTML = 'value:' + data.value + '\nfrom:' + data.labels[1] + '\nto:' + data.labels[0]
