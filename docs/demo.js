@@ -1,10 +1,4 @@
-/* eslint-disable */
-
-var lrmap = L.map('map1').setView([35.4199, 95.2402], 4);
-L.tileLayer('http://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}', {
-  subdomains: ["1", "2", "3", "4"]
-}).addTo(lrmap);
-var data = [
+export const data = [
   {
   "color": "rgb(101, 169, 249)",
   "from": [116.404844, 39.91405],
@@ -52,7 +46,7 @@ var data = [
 // }
 ];
 
-var inData = [{
+export const inData = [{
   color: 'rgba(251,176,49,0.8)',
   from: [113.2672, 23.1122],
   to: [116.404844, 39.91405],
@@ -209,58 +203,4 @@ var inData = [{
   to: [116.404844, 39.91405],
   labels: ['黑龙江', '北京'],
   value: 160,
-}]
-
-var popover = document.querySelector('.popover');
-var options = {
-  minRadius: 5,
-  maxRadius: 10,
-  arcWidth: 0.1,
-  label: true,
-  order: false,
-  replacePopover: function (x, y, data, index) {
-    console.log(x, y, data, index, 'show popover');
-    popover.innerHTML = 'value:' + data.value + '\nfrom:' + data.labels[1] + '\nto:' + data.labels[0]
-    return popover;
-  },
-  onShowPopover: function (x, y, data, index) {
-    console.log(x, y, data, index, 'show popover');
-  },
-  onHidePopover: function (index) {
-    console.log('hide popover', index);
-  }
-};
-var migrationLayer = L.migrationLayer(data.map(i => Object.assign(i, {  })), options);
-var layer = migrationLayer.addTo(lrmap);
-window.rendomData = function () {
-  data = data.map(item => {
-    return {
-      ...item,
-      value: parseInt(Math.random() * 100)
-    }
-  });
-  migrationLayer.setData(data)
-}
-window.rendomStyle = function () {
-  options.pulseRadius = Math.random() * 20
-  options.arcWidth = Math.random() * 5
-  migrationLayer.setStyle(options)
-}
-window.add = function () {
-  migrationLayer.addTo(lrmap)
-}
-window.remove = function () {
-  lrmap.removeLayer(layer)
-}
-window.show = function () {
-  migrationLayer.show()
-}
-window.hide = function () {
-  migrationLayer.hide()
-}
-window.changeDirection = function () {
-  lrmap.removeLayer(layer)
-  options = Object.assign(options, { direction: 'in'});
-  migrationLayer = L.migrationLayer(inData, options)
-  layer = migrationLayer.addTo(lrmap)
-}
+}];
