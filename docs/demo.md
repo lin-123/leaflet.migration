@@ -82,7 +82,7 @@ export default () => {
   };
 
   return (
-    <div class="box">
+    <div>
       <div id="map1" style={{ height: 600 }}></div>
       <div className="control">
         <button onClick={rendomData}>rendomData</button>
