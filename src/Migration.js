@@ -4,7 +4,7 @@ import Pulse from './Pulse';
 import Spark from './Spark';
 import { extend } from './utils';
 import { STYLE } from './config';
-import Popover from './popver';
+import Popover from './popover';
 
 const mergeStyle = (style) => {
   if (!style) return STYLE;

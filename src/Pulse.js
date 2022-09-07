@@ -28,7 +28,7 @@ class Pulse {
       const { clientX, clientY } = e;
       popover.show(clientX - left, clientY - top, data, index);
     };
-    this.hidePopover = () => popover.hide(index);
+    this.hidePopover = () => popover.hide(data, index);
     this.initDom();
   }
 

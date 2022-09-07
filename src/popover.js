@@ -49,7 +49,7 @@ class Popover {
     });
   }
 
-  hide(idx) {
+  hide(data, idx) {
     const { el, onHide } = this;
     if (getType(onHide) === 'Function') onHide(data, idx);
     el.style.display = 'none';
