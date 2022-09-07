@@ -3,9 +3,7 @@ import Arc from './Arc';
 class Line extends Arc {
   constructor(options) {
     super(options);
-    const {
-      labels, font, label
-    } = options;
+    const { labels, font, label } = options;
     Object.assign(this, {
       font,
       label,
@@ -17,18 +15,11 @@ class Line extends Arc {
     Object.assign(context, {
       lineWidth: this.lineWidth,
       strokeStyle: this.color,
-      fillStyle: this.strokeStyle
+      fillStyle: this.strokeStyle,
     });
 
     context.beginPath();
-    context.arc(
-      this.centerX,
-      this.centerY,
-      this.radius,
-      this.startAngle,
-      this.endAngle,
-      false
-    );
+    context.arc(this.centerX, this.centerY, this.radius, this.startAngle, this.endAngle, false);
     context.stroke();
 
     if (this.label) {

@@ -6,7 +6,7 @@ L.MigrationLayer = L.Layer.extend({
   initialize(_data = [], options) {
     Object.assign(this, {
       _data,
-      options
+      options,
     });
     this._show = true;
     this.mapHandles = [];
@@ -72,7 +72,7 @@ L.MigrationLayer = L.Layer.extend({
       container,
       map: this._map,
       data: this._convertData(),
-      options: this.options
+      options: this.options,
     });
   },
   _bindMapEvents() {
@@ -127,7 +127,7 @@ L.MigrationLayer = L.Layer.extend({
       return _data.map(({ from, to, ...opt }) => ({
         from: getLatLng(from),
         to: getLatLng(to),
-        ...opt
+        ...opt,
       }));
     }
     return [];

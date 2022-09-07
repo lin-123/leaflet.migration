@@ -9,6 +9,6 @@ export default defineConfig({
   outputPath: 'docs-dist',
   dynamicImport: {},
   publicPath,
-  base: publicPath
+  base: publicPath,
   // more config: https://d.umijs.org/config
 });

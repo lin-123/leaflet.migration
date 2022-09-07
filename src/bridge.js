@@ -27,6 +27,6 @@
       delete this.listeners[event];
       // eslint-disable-next-line
       delete el.Gis3DBridge;
-    }
+    },
   };
-}());
+})();

@@ -1,14 +1,18 @@
 // 脉冲， label 圆环扩散
 import store from './store';
 
-
 const domCache = [];
 
 class Pulse {
   constructor({
-    x, y, container, data, index, popover,
+    x,
+    y,
+    container,
+    data,
+    index,
+    popover,
     // user config radius
-    radius
+    radius,
   }) {
     const { color, value, labels } = data;
     const r = radius;
@@ -21,7 +25,7 @@ class Pulse {
       value,
       labels,
       r,
-      scale: 1
+      scale: 1,
     });
     this.showPopover = (e) => {
       const { top, left } = store.mapPosi;
@@ -48,9 +52,7 @@ class Pulse {
       this.ring = document.createElement('div');
       this.pulse.appendChild(this.ring);
     }
-    const {
-      x, y, r, color, pulse, ring
-    } = this;
+    const { x, y, r, color, pulse, ring } = this;
     Object.assign(pulse.style, {
       position: 'absolute',
       zIndex: '1',
@@ -71,7 +73,7 @@ class Pulse {
       height: `${2 * r}px`,
       left: `${-1}px`,
       top: `${-1}px`,
-      border: `1px solid ${color}`
+      border: `1px solid ${color}`,
     });
     this.container.appendChild(pulse);
 
@@ -82,7 +84,7 @@ class Pulse {
   draw() {
     const { scale } = this;
     Object.assign(this.ring.style, {
-      transform: `scale(${scale})`
+      transform: `scale(${scale})`,
     });
     this.scale += 0.02;
     if (scale > 2) {

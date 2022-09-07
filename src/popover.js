@@ -2,9 +2,7 @@ import { getType } from './utils';
 import { POPOVER_OFFSET } from './config';
 
 class Popover {
-  constructor({
-    onShowPopover, onHidePopover, container, replacePopover
-  }) {
+  constructor({ onShowPopover, onHidePopover, container, replacePopover }) {
     // wrapper
     this.el = L.DomUtil.create('div', '', container);
     Object.assign(this.el.style, {
@@ -12,7 +10,7 @@ class Popover {
       left: '0',
       top: '0',
       display: 'none',
-      zIndex: '11'
+      zIndex: '11',
     });
     this.context = L.DomUtil.create('div', '', this.el);
     if (getType(replacePopover) === 'Function') {
@@ -22,7 +20,7 @@ class Popover {
         border: '1px solid grey',
         background: 'rgba(255,255,255,.3)',
         borderRadius: '5px',
-        padding: '8px 16px'
+        padding: '8px 16px',
       });
     }
     Object.assign(this, {
