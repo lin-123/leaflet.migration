@@ -22,9 +22,9 @@ class Spark extends Arc {
       x: 50,
       y: 80,
       rotation: (50 * Math.PI) / 180,
-      style: 'circle',
+      style: options.marker,
       color: 'rgb(255, 255, 255)',
-      size: 3,
+      size: 10,
       borderWidth: 0,
       borderColor: this.color,
     });
@@ -82,6 +82,7 @@ class Spark extends Arc {
     context.translate(this.centerX, this.centerY);
     this.marker.x = Math.cos(this.trailAngle) * this.radius;
     this.marker.y = Math.sin(this.trailAngle) * this.radius;
+    this.marker.angle = this.trailAngle;
     this.marker.draw(context);
     context.restore();
 

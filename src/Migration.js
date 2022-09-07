@@ -98,6 +98,7 @@ class Migration {
       }
       // 圆环脉冲
       const pulse = new Pulse(pulseOption);
+
       const spark = new Spark({
         startX: from[0],
         startY: from[1],
@@ -106,6 +107,7 @@ class Migration {
         width: minRadius,
         color,
         direction,
+        marker: this.style.marker
       });
 
       this.store.arcs.push(arc);

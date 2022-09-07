@@ -31,6 +31,8 @@ export default () => {
       arcWidth: 0.1,
       label: true,
       order: false,
+      marker: 'arrow',
+      // marker: 'https://github.githubassets.com/favicons/favicon.png',
       replacePopover(x, y, data, index) {
         console.log(x, y, data, index, 'show popover');
         popover.innerHTML =
@@ -48,6 +50,7 @@ export default () => {
       data.map((i) => Object.assign(i, {})),
       options,
     );
+
     const layer = migrationLayer.addTo(lrmap);
     self.current = { options, layer, migrationLayer, lrmap };
     setReady(true);
