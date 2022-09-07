@@ -1,5 +1,4 @@
 {
-  "private": true,
   "name": "leaflet.migration",
   "version": "2.2.0",
   "scripts": {
