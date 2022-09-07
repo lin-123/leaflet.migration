@@ -4,7 +4,7 @@ import Pulse from './Pulse';
 import Spark from './Spark';
 import { extend } from './utils';
 import { STYLE } from './config';
-import Popover from './popver';
+import Popover from './popover';
 
 const mergeStyle = (style) => {
   if (!style) return STYLE;
@@ -15,9 +15,7 @@ const mergeStyle = (style) => {
 class Migration {
   // options = { map, canvas, data, options, container }
   constructor({ options, container, ...otherOptions }) {
-    const {
-      replacePopover, onShowPopover, onHidePopover, direction, order, ...style
-    } = options;
+    const { replacePopover, onShowPopover, onHidePopover, direction, order, ...style } = options;
     Object.assign(this, {
       ...otherOptions,
       direction,
@@ -29,11 +27,14 @@ class Migration {
       store: {
         arcs: [],
         pulses: [],
-        sparks: []
-      }
+        sparks: [],
+      },
     });
     this.popover = new Popover({
-      replacePopover, onShowPopover, onHidePopover, container
+      replacePopover,
+      onShowPopover,
+      onHidePopover,
+      container,
     });
     this.context = this.canvas.getContext('2d');
   }
@@ -58,25 +59,25 @@ class Migration {
     }
     this.clear();
 
-    const dataRange = extend(data, i => i.value);
+    const dataRange = extend(data, (i) => i.value);
     const {
       popover,
-      container, style: {
-        arcWidth, minRadius, label, maxRadius
-      }
+      container,
+      style: { arcWidth, minRadius, label, maxRadius },
     } = this;
     const radiusScale = linearScale(dataRange, [minRadius, maxRadius || 2 * minRadius]);
     data.forEach((item, index) => {
       // console.log('item',item);
-      const {
-        from, to, labels, color
-      } = item;
+      const { from, to, labels, color } = item;
       const arc = new Line({
         startX: from[0],
         startY: from[1],
         endX: to[0],
         endY: to[1],
-        labels, label, width: arcWidth, color
+        labels,
+        label,
+        width: arcWidth,
+        color,
       });
       // const zoom = this.map.getZoom();
       const radius = radiusScale(item.value);
@@ -90,7 +91,7 @@ class Migration {
         container,
         index,
         data: item,
-        popover
+        popover,
       };
       if (direction === 'in') {
         pulseOption = Object.assign(pulseOption, { x: from[0], y: from[1] });
@@ -104,7 +105,7 @@ class Migration {
         endY: to[1],
         width: minRadius,
         color,
-        direction
+        direction,
       });
 
       this.store.arcs.push(arc);
@@ -118,11 +119,11 @@ class Migration {
   }
 
   clear() {
-    this.store.pulses.forEach(pulse => pulse.clear());
+    this.store.pulses.forEach((pulse) => pulse.clear());
     this.store = {
       arcs: [],
       pulses: [],
-      sparks: []
+      sparks: [],
     };
     // 更新状态
     this.playAnimation = true;
@@ -133,7 +134,7 @@ class Migration {
 
   draw(shapes) {
     const { context } = this;
-    shapes.forEach(shap => shap.draw(context));
+    shapes.forEach((shap) => shap.draw(context));
     for (let i = 0, len = shapes.length; i < len; i++) {
       shapes[i].draw(context);
     }
@@ -141,7 +142,11 @@ class Migration {
 
   start() {
     const {
-      started, store, context, canvas: { width, height }, order
+      started,
+      store,
+      context,
+      canvas: { width, height },
+      order,
     } = this;
     if (!started) {
       this.draw(store.pulses);
@@ -154,7 +159,7 @@ class Migration {
             if (order && key === 'sparks') {
               const item = shapes[this.index];
               item.draw(context, order);
-              if ((item.endAngle - item.trailAngle) * 180 / Math.PI < 0.5) {
+              if (((item.endAngle - item.trailAngle) * 180) / Math.PI < 0.5) {
                 item.trailAngle = item.startAngle;
                 if (this.index < shapes.length - 1) {
                   this.index += 1;
@@ -163,7 +168,7 @@ class Migration {
                 }
               }
             } else {
-              shapes.forEach(shap => shap.draw(context));
+              shapes.forEach((shap) => shap.draw(context));
             }
           });
         }

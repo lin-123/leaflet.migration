@@ -8,7 +8,7 @@ export const STYLE = {
   arcWidth: 1,
   label: true,
   // arrow|circle|imgUrl
-  marker: 'arrow'
+  marker: 'arrow',
 };
 
 export const POPOVER_OFFSET = 12;

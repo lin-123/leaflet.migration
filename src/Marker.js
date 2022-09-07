@@ -1,4 +1,3 @@
-
 class Marker {
   constructor(options) {
     this.x = options.x;
@@ -15,7 +14,7 @@ class Marker {
     Object.assign(context, {
       lineWidth: this.borderWidth || 0,
       strokeStyle: this.borderColor || '#000',
-      fillStyle: this.color || '#000'
+      fillStyle: this.color || '#000',
     });
 
     // 目前先只支持圆

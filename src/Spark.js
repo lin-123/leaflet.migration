@@ -8,7 +8,7 @@ class Spark extends Arc {
     this.tailPointsCount = 10; // 拖尾点数
     // 飞线速度
     this.factor = 2 / this.radius;
-    this.deltaAngle = (80 / Math.min(this.radius, 400)) / this.tailPointsCount;
+    this.deltaAngle = 80 / Math.min(this.radius, 400) / this.tailPointsCount;
     this.trailAngle = this.startAngle;
     this.arcAngle = this.startAngle;
     // 是否有阴影
@@ -21,12 +21,12 @@ class Spark extends Arc {
     this.marker = new Marker({
       x: 50,
       y: 80,
-      rotation: 50 * Math.PI / 180,
+      rotation: (50 * Math.PI) / 180,
       style: 'circle',
       color: 'rgb(255, 255, 255)',
       size: 3,
       borderWidth: 0,
-      borderColor: this.color
+      borderColor: this.color,
     });
   }
 
@@ -35,19 +35,15 @@ class Spark extends Arc {
       lineWidth,
       strokeStyle: strokeColor,
       shadowColor: strokeColor,
-      lineCap: 'round'
+      lineCap: 'round',
     });
     context.beginPath();
-    context.arc(
-      this.centerX, this.centerY, this.radius, startAngle, endAngle, false
-    );
+    context.arc(this.centerX, this.centerY, this.radius, startAngle, endAngle, false);
     context.stroke();
   }
 
   draw(context, order) {
-    const {
-      endAngle, trailAngle, factor, color, deltaAngle
-    } = this;
+    const { endAngle, trailAngle, factor, color, deltaAngle } = this;
     // 匀速
     const angle = trailAngle + factor;
     const strokeColor = color;
@@ -58,7 +54,11 @@ class Spark extends Arc {
     context.beginPath();
     this.drawArc(
       // this.lineWidth from 圆的半径
-      context, strokeColor, 2 * this.lineWidth, this.startAngle, this.arcAngle
+      context,
+      strokeColor,
+      2 * this.lineWidth,
+      this.startAngle,
+      this.arcAngle,
     );
 
     // 拖尾效果
@@ -70,9 +70,9 @@ class Spark extends Arc {
         this.drawArc(
           context,
           arcColor,
-          tailLineWidth - tailLineWidth / count * i,
+          tailLineWidth - (tailLineWidth / count) * i,
           trailAngle - deltaAngle * i,
-          trailAngle
+          trailAngle,
         );
       }
     }
@@ -85,7 +85,7 @@ class Spark extends Arc {
     this.marker.draw(context);
     context.restore();
 
-    if (!order && (endAngle - this.trailAngle) * 180 / Math.PI < 0.5) {
+    if (!order && ((endAngle - this.trailAngle) * 180) / Math.PI < 0.5) {
       this.trailAngle = this.startAngle;
       this.animateBlur = false;
     }

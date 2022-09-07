@@ -1,7 +1,7 @@
 import { FACTOR } from './config';
 
 export function getDistance(width, height) {
-  const pow = length => length * length;
+  const pow = (length) => length * length;
   return Math.sqrt(pow(width) + pow(height));
 }
 

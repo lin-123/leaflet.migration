@@ -4,9 +4,7 @@ import { getDistance } from './utils';
 
 class Arc {
   constructor(options) {
-    const {
-      startX, startY, endX, endY, width, color = '#fff'
-    } = options;
+    const { startX, startY, endX, endY, width, color = '#fff' } = options;
 
     // 两点之间的圆有多个，通过两点及半径便可以定出两个圆，根据需要选取其中一个圆
     const l = getDistance(startX - endX, startY - endY);
@@ -31,7 +29,7 @@ class Arc {
       endAngle,
       radius,
       color,
-      lineWidth: width || 1
+      lineWidth: width || 1,
     });
   }
 
