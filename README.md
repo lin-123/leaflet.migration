@@ -1,18 +1,18 @@
 # leaflet.migration
 leaflet plugin that provides migration lines layer.
 
-![alt text](public/example.jpg)
+<!-- ![alt text](public/example.jpg) -->
 
 ## Installation
 ```
 npm install -S leaflet.migration
 ```
 
-## Rquirements
+## Requirements
 - leaflet ^1.5.1
 - node 10.8.0
 
-## Usage
+## Demo
 
 ```javascript
 import 'leflet.migration';
@@ -23,7 +23,7 @@ const data = [{
   color: '',
   value: ''
 }];
-var options = {
+const options = {
   minRadius: 3,
   maxRadius: 3,
   arcWidth: 0.001,
@@ -41,7 +41,7 @@ var options = {
     console.log('hide popover', index);
   }
 };
-var migrationLayer = L.migrationLayer(data.map(i => Object.assign(i, {  })), options);
+const migrationLayer = L.migrationLayer(data, options);
 migrationLayer.setStyle({ pulse: { radius: 20 }})
 migrationLayer.setData([])
 map.remove(migrationLayer)
@@ -103,46 +103,5 @@ onRemove(`<Map> map`)|this|called on map.remove(migrationLayer)
 
 ## Development
 - npm start
-- web server will listen on 3000
-- open http://localhost:3000
-
-## TODO
-
-- [] 渲染性能优化， 可以支持上万个点同时运动
-  - 提前把各个扫尾的点的下一个位置计算好， 然后调用 canvas redraw
-
-
-## feature list
-### 2.2.0
-- [x] options新增了一个order参数，可以控制轨迹动画是否按顺序播放
-### 2.1.0
-- [x] 更新 option 参数， 原 pulseRadius 改成 minRadius, maxRadius；
-
-### 2.0.5
-- [x] fix bug: popover 由于 map 元素相对页面左上角的偏移而出现偏移 label 元素较远
-
-
-### 2.0.4
-- [x] fix spark not work when Math.abs(startAngle - endAngle) > Math.PI
-
-### 2.0.1
-- [x] fix spark cannot move
-
-### 2.0.0
-- [x] accomplish setData/setStyle
-- [x] accomplish addTo and remove function
-- [x] update init options
-- [x] add demo to gh-pages
-- [x] customize popover
-
-### 1.1.0
-- [x] update return value of new MigrationLayer()
-
-### 1.0.3
-- [x] set pulse size by data value, radius, zoom
-
-### 1.0.0
-- [x] add webpack
-- [x] add popover
-- [x] config data, style
-- [x] layer.setData
+- web server will listen on 8000
+- open http://localhost:8000
