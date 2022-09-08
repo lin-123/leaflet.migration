@@ -1,4 +1,4 @@
-import { IconType } from "./typings";
+import { IconType } from "./typings/base";
 
 // 因子
 export const FACTOR = 1.5;
