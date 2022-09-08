@@ -1,4 +1,4 @@
-import { IconType } from "./typings/base";
+import { Direction, IconType } from "./typings/base";
 
 // 因子
 export const FACTOR = 1.5;
@@ -13,7 +13,7 @@ export const STYLE = {
   marker: 'circle',
 };
 
-export const DEFAULT_STYLE = {
+export const DEFAULT_OPTION = {
   marker: {
     // 最小半径、最大半径
     radius: [5, 10],
@@ -26,12 +26,13 @@ export const DEFAULT_STYLE = {
     // 飞线宽度
     width: 1,
     // 是否按顺序走飞线
-    order: false,
+    order: true,
     icon: {
       type: IconType.arrow,
       imgUrl: '',
       size: 20
     },
+    direction: Direction.out
   },
 }
 

@@ -1,3 +1,6 @@
+/**
+ * 核心类
+ */
 import linearScale from 'uc-fun/lib/linearScale';
 import Line from './Line';
 import Pulse from './Pulse';
@@ -5,6 +8,7 @@ import Spark from './Spark';
 import { extend } from './utils';
 import { STYLE } from './config';
 import Popover from './popover';
+import { Context } from './store';
 
 const mergeStyle = (style) => {
   if (!style) return STYLE;
@@ -13,47 +17,48 @@ const mergeStyle = (style) => {
 };
 
 class Migration {
+  ctx: Context = new Context()
+  started: boolean = false
+  playAnimation: boolean = true
+  store: any = {
+    arcs: [],
+    pulses: [],
+    sparks: [],
+  }
+  popover: Popover
+
   // options = { map, canvas, data, options, container }
-  constructor({ options, container, ...otherOptions }) {
-    const { replacePopover, onShowPopover, onHidePopover, direction, order, ...style } = options;
-    Object.assign(this, {
-      ...otherOptions,
-      direction,
-      container,
-      order: order || false,
-      style: mergeStyle(style),
-      playAnimation: true,
-      started: false,
-      store: {
-        arcs: [],
-        pulses: [],
-        sparks: [],
-      },
-    });
-    this.popover = new Popover({
-      replacePopover,
-      onShowPopover,
-      onHidePopover,
-      container,
-    });
-    this.context = this.canvas.getContext('2d');
-  }
-
-  setStyle(style) {
-    this.style = mergeStyle(style);
-    this.refresh();
-  }
-
-  setData(data) {
-    this.data = data;
-    this.refresh();
+  constructor({ ctx }: { ctx: Context }) {
+    this.ctx = ctx;
+    // const { replacePopover, onShowPopover, onHidePopover, ...options } = ctx;
+    // Object.assign(this, {
+    //   ...otherOptions,
+    //   direction,
+    //   container,
+    //   order: order || false,
+    //   style: mergeStyle(style),
+    // });
+    this.popover = new Popover(ctx);
   }
 
   /*
    * 更新数据
    */
   refresh() {
-    const { data, direction } = this;
+    const {
+      data, container, options: {
+        marker: {
+          radius: [minRadius, maxRadius],
+          textVisible: label
+        },
+        line: {
+          direction,
+          width: arcWidth,
+          icon
+        }
+      }
+    } = this.ctx;
+
     if (!data || data.length === 0) {
       return;
     }
@@ -62,8 +67,6 @@ class Migration {
     const dataRange = extend(data, (i) => i.value);
     const {
       popover,
-      container,
-      style: { arcWidth, minRadius, label, maxRadius },
     } = this;
     const radiusScale = linearScale(dataRange, [minRadius, maxRadius || 2 * minRadius]);
     data.forEach((item, index) => {
@@ -79,7 +82,7 @@ class Migration {
         width: arcWidth,
         color,
       });
-      // const zoom = this.map.getZoom();
+
       const radius = radiusScale(item.value);
       // 计算每一个圆环的大小
       let pulseOption = {
@@ -104,10 +107,12 @@ class Migration {
         startY: from[1],
         endX: to[0],
         endY: to[1],
+
+        // style: this.ctx.options.line,
         width: minRadius,
         color,
         direction,
-        marker: this.style.marker
+        marker: icon.type
       });
 
       this.store.arcs.push(arc);
@@ -134,11 +139,11 @@ class Migration {
     window.cancelAnimationFrame(this.requestAnimationId);
   }
 
-  draw(shapes) {
-    const { context } = this;
-    shapes.forEach((shap) => shap.draw(context));
+  draw(shapes: any) {
+    const { canvasCtx } = this.ctx;
+    shapes.forEach((shap: any) => shap.draw(canvasCtx));
     for (let i = 0, len = shapes.length; i < len; i++) {
-      shapes[i].draw(context);
+      shapes[i].draw(canvasCtx);
     }
   }
 
@@ -146,10 +151,8 @@ class Migration {
     const {
       started,
       store,
-      context,
-      canvas: { width, height },
-      order,
     } = this;
+    const { canvasCtx: context, canvas: { width, height }, options: { line: { order }} } = this.ctx;
     if (!started) {
       this.draw(store.pulses);
       const drawFrame = () => {
@@ -158,6 +161,7 @@ class Migration {
           context.clearRect(0, 0, width, height);
           Object.keys(store).forEach((key) => {
             const shapes = store[key];
+
             if (order && key === 'sparks') {
               const item = shapes[this.index];
               item.draw(context, order);

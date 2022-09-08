@@ -9,7 +9,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.migration';
-import { data, inData } from './demo';
+import { data, inData, randomDataByLen } from './demo';
 
 export default () => {
   const [ready, setReady] = useState(false);
@@ -26,12 +26,26 @@ export default () => {
 
     const popover = document.querySelector('.popover');
     const options = {
-      minRadius: 5,
-      maxRadius: 20,
-      arcWidth: 0.1,
-      label: false,
-      order: false,
-      marker: 'arrow',
+      marker: {
+        // 最小半径、最大半径
+        radius: [5, 10],
+        // 是否显示波纹动销
+        pulse: true,
+        textVisible: true
+      },
+      // 飞线
+      line: {
+        // 飞线宽度
+        width: 1,
+        // 是否按顺序走飞线
+        order: false,
+        icon: {
+          type: 'arrow',
+          imgUrl: '',
+          size: 20
+        },
+        // direction: Direction.out
+      },
       // marker: 'https://github.githubassets.com/favicons/favicon.png',
       replacePopover(x, y, data, index) {
         console.log(x, y, data, index, 'show popover');
@@ -59,17 +73,11 @@ export default () => {
   const { options, migrationLayer, layer, lrmap } = self.current;
 
   const rendomData = () => {
-    const newData = data.map((item) => {
-      return {
-        ...item,
-        value: parseInt(Math.random() * 100),
-      };
-    });
-    self.current.migrationLayer.setData(newData);
+    self.current.migrationLayer.setData(randomDataByLen(Math.floor(30 * Math.random())));
   };
   const rendomStyle = () => {
-    options.pulseRadius = Math.random() * 20;
-    options.arcWidth = Math.random() * 5;
+    options.marker.radius[1] = Math.random() * 20;
+    options.line.width = Math.random() * 5;
     self.current.migrationLayer.setStyle(options);
   };
   const add = () => migrationLayer.addTo(lrmap);

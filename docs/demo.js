@@ -12,11 +12,14 @@ export const genData = (length, interator) => {
   });
 };
 
-export const data = genData(10, (i) => ({
+export const randomDataByLen = (len) => genData(len, (i) => ({
   ...i,
+  // to: [116.404844, 32.91405],
   from: [116.404844, 39.91405],
   labels: ['北京', i.labels[1]]
 }));
+
+export const data = randomDataByLen(10);
 
 export const inData = genData(10, (i) => ({
   ...i,

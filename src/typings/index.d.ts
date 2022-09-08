@@ -1,4 +1,4 @@
 declare module '*.css';
 declare module '*.less';
 
-declare module 'leaflet';
+// declare module 'leaflet';

@@ -1,10 +1,18 @@
 import { getType } from './utils';
 import { POPOVER_OFFSET } from './config';
+import L from 'leaflet';
+import { Context } from './store';
 
 class Popover {
-  constructor({ onShowPopover, onHidePopover, container, replacePopover }) {
+  replace?: Function
+  onShow?: Function
+  onHide?: Function
+  el: HTMLDivElement
+  context: HTMLDivElement;
+
+  constructor(ctx: Context) {
     // wrapper
-    this.el = L.DomUtil.create('div', '', container);
+    this.el = L.DomUtil.create('div', '', ctx.container);
     Object.assign(this.el.style, {
       position: 'absolute',
       left: '0',
@@ -13,6 +21,7 @@ class Popover {
       zIndex: '11',
     });
     this.context = L.DomUtil.create('div', '', this.el);
+    const { replacePopover, onShowPopover, onHidePopover } = ctx.options;
     if (getType(replacePopover) === 'Function') {
       this.replace = replacePopover;
     } else {

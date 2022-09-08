@@ -1,158 +1,162 @@
-import L from 'leaflet';
+import L, { LatLngTuple, LeafletEvent, Map } from 'leaflet';
 import Migration from './Migration';
 import { MIN_ZOOM } from './config';
-import store from './store';
+import store, { Context } from './store'
+import { Data, DataItem, Options } from './typings/base';
 
-L.MigrationLayer = L.Layer.extend({
-  initialize(_data = [], options) {
-    Object.assign(this, {
-      _data,
-      options,
+class MigrationLayer extends L.Layer {
+  protected _show: boolean = false
+  protected mapHandles: Array<any> = []
+  container: HTMLElement
+  canvas: HTMLElement
+  migration: Migration
+  options: Options
+  data: Data
+  ctx: Context
+
+  constructor(_data: Data, options: Options) {
+    super();
+    Object.assign(this, { _show: true });
+    this.ctx = new Context();
+    this.data = _data;
+    this.options = options;
+  }
+
+  onAdd(map: Map) {
+    const { container, canvas } = this.genElement(map);
+
+    store.init({ container });
+    this.ctx.init({
+      container, canvas, map
     });
-    this._show = true;
-    this.mapHandles = [];
-  },
-  onAdd(map) {
-    this._map = map;
-    this._init();
+    this.ctx.setOptions(this.options);
+    this.ctx.setData(this.data);
+    this.container = container;
+    this.canvas = canvas;
+    this.migration = new Migration({
+      ctx: this.ctx
+    });
+
     this._bindMapEvents();
     this._draw();
     return this;
-  },
-  onRemove(map) {
-    this.mapHandles.forEach(({ type, handle }) => map.off(type, handle));
+  }
+
+  onRemove(map: Map) {
+    this.mapHandles.forEach(({ type, handle }: any) => map.off(type, handle));
     this.mapHandles = [];
     L.DomUtil.remove(this.container);
     this.migration.clear();
     return this;
-  },
-  setData(data) {
-    this._data = data;
-    this._draw();
+  }
+
+  setData(data: Data) {
+    this.ctx.setData(data);
+    this.migration.refresh();
+    // this._draw();
     return this;
-  },
-  setStyle(style) {
-    this.migration.setStyle(style);
+  }
+  setStyle(style: Options) {
+    this.ctx.setOptions(style);
+    this.migration.refresh();
     return this;
-  },
+  }
   hide() {
     this.container.style.display = 'none';
     return this;
-  },
+  }
   show() {
     this.container.style.display = '';
     this._show = true;
     return this;
-  },
+  }
   play() {
     this.migration.play();
     return this;
-  },
+  }
   pause() {
     this.migration.pause();
     return this;
-  },
+  }
 
-  _init() {
+  private genElement(map: Map) {
     // div > canvas, div.popover
     const container = L.DomUtil.create('div', 'leaflet-ODLayer-container');
-    this.container = container;
-    const { x, y } = this._map.getSize();
+    const { x, y } = map.getSize();
     Object.assign(container.style, {
       position: 'absolute',
       width: `${x}px`,
       height: `${y}px`,
     });
     const canvas = document.createElement('canvas');
-    this.canvas = canvas;
     container.appendChild(canvas);
-    this._map.getPanes().overlayPane.appendChild(container);
-    store.init({ container });
-    this.migration = new Migration({
-      canvas,
-      container,
-      map: this._map,
-      data: this._convertData(),
-      options: this.options,
-    });
-  },
+    map.getPanes().overlayPane.appendChild(container);
+    return { container, canvas };
+  }
   _bindMapEvents() {
-    const self = this;
-    function moveendHandle(e) {
+    const { mapHandles } = this;
+    const moveendHandle = (e: LeafletEvent) => {
       const zoom = e.target.getZoom();
       if (zoom < MIN_ZOOM) {
-        self.hide();
+        this.hide();
         return;
       }
-      if (!self._show) {
-        self.show();
+      if (!this._show) {
+        this.show();
       }
-      self.migration.play();
-      self._draw();
+      this.migration.play();
+      this._draw();
     }
-    self._map.on('moveend', moveendHandle);
-    self.mapHandles.push({ type: 'moveend', handle: moveendHandle });
+    const { map } = this.ctx;
+    map.on('moveend', moveendHandle);
+    mapHandles.push({ type: 'moveend', handle: moveendHandle });
 
-    function zoomstartHandle() {
-      self.container.style.display = 'none';
+    const zoomstartHandle = () => {
+      this.container.style.display = 'none';
     }
-    self._map.on('zoomstart ', zoomstartHandle);
-    self.mapHandles.push({ type: 'zoomstart', handle: zoomstartHandle });
+    map.on('zoomstart ', zoomstartHandle);
+    mapHandles.push({ type: 'zoomstart', handle: zoomstartHandle });
 
-    function zoomendHandle() {
-      if (self._show) {
-        self.container.style.display = '';
-        self._draw();
+    const zoomendHandle = () => {
+      if (this._show) {
+        this.container.style.display = '';
+        this._draw();
       }
     }
-    self._map.on('zoomend', zoomendHandle);
-    self.mapHandles.push({ type: 'zoomend', handle: zoomendHandle });
-  },
+    map.on('zoomend', zoomendHandle);
+    mapHandles.push({ type: 'zoomend', handle: zoomendHandle });
+  }
   _draw() {
-    const bounds = this._map.getBounds();
+    const bounds = this.ctx.map.getBounds();
     if (bounds && this.migration.playAnimation) {
       this._resize();
-      this.migration.setData(this._convertData());
+      this.ctx.setData(this.data);
+      this.migration.refresh();
     }
-  },
-  _convertData() {
-    const { _map, _data } = this;
-    const bounds = _map.getBounds();
-    if (_data && Array.isArray(_data) && _data.length > 0 && bounds) {
-      const getLatLng = ([lng, lat]) => {
-        const { x, y } = _map.latLngToContainerPoint(new L.LatLng(lat, lng));
-        return [x, y];
-      };
+  }
 
-      // opt = { labels, value, color }
-      return _data.map(({ from, to, ...opt }) => ({
-        from: getLatLng(from),
-        to: getLatLng(to),
-        ...opt,
-      }));
-    }
-    return [];
-  },
   _resize() {
-    const bounds = this._map.getBounds();
+    const { map, canvas, container } = this.ctx;
+    const bounds = map.getBounds();
     const topleft = bounds.getNorthWest();
-    const { y } = this._map.latLngToContainerPoint(topleft);
+    const { y } = map.latLngToContainerPoint(topleft);
     // 当地图缩放或者平移到整个地图的范围小于外层容器的范围的时候，要对this.container进行上下平移操作，反之则回归原位
     if (y > 0) {
-      this.container.style.top = `${-y}px`;
+      container.style.top = `${-y}px`;
     } else {
-      this.container.style.top = '0px';
+      container.style.top = '0px';
     }
 
-    const containerStyle = window.getComputedStyle(this._map.getContainer());
-    this.canvas.setAttribute('width', parseInt(containerStyle.width, 10));
-    this.canvas.setAttribute('height', parseInt(containerStyle.height, 10));
+    const containerStyle = window.getComputedStyle(map.getContainer());
+    canvas.setAttribute('width', containerStyle.width);
+    canvas.setAttribute('height', containerStyle.height);
 
-    const posi = this._map.latLngToLayerPoint(topleft);
-    L.DomUtil.setPosition(this.container, posi);
-  },
-});
+    const posi = map.latLngToLayerPoint(topleft);
+    L.DomUtil.setPosition(container, posi);
+  }
+}
 
-L.migrationLayer = function (data, options) {
-  return new L.MigrationLayer(data, options);
+
+L.migrationLayer = function (data: Data, options: Options) {
+  return new MigrationLayer(data, options);
 };

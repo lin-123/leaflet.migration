@@ -27,6 +27,7 @@ class Pulse {
       r,
       scale: 1,
     });
+
     this.showPopover = (e) => {
       const { top, left } = store.mapPosi;
       const { clientX, clientY } = e;
