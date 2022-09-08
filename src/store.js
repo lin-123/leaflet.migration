@@ -1,3 +1,6 @@
+/**
+ * 全局共享数据
+ */
 class Store {
   init({ container }) {
     // map container

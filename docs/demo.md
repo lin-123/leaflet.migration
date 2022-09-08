@@ -27,9 +27,9 @@ export default () => {
     const popover = document.querySelector('.popover');
     const options = {
       minRadius: 5,
-      maxRadius: 10,
+      maxRadius: 20,
       arcWidth: 0.1,
-      label: true,
+      label: false,
       order: false,
       marker: 'arrow',
       // marker: 'https://github.githubassets.com/favicons/favicon.png',
@@ -47,7 +47,7 @@ export default () => {
       },
     };
     const migrationLayer = L.migrationLayer(
-      data.map((i) => Object.assign(i, {})),
+      data,
       options,
     );
 

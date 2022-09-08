@@ -1,3 +1,4 @@
+import L from 'leaflet';
 import Migration from './Migration';
 import { MIN_ZOOM } from './config';
 import store from './store';
@@ -151,6 +152,7 @@ L.MigrationLayer = L.Layer.extend({
     L.DomUtil.setPosition(this.container, posi);
   },
 });
+
 L.migrationLayer = function (data, options) {
   return new L.MigrationLayer(data, options);
 };
