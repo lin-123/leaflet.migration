@@ -10,7 +10,6 @@ export interface LineOption {
     imgUrl: string,
     size: number
   },
-  direction: Direction
 }
 export interface MarkerOption {
   // 最小半径、最大半径

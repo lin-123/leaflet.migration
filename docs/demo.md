@@ -44,7 +44,6 @@ export default () => {
           imgUrl: '',
           size: 20
         },
-        // direction: Direction.out
       },
       // marker: 'https://github.githubassets.com/favicons/favicon.png',
       replacePopover(x, y, data, index) {
@@ -66,7 +65,7 @@ export default () => {
     );
 
     const layer = migrationLayer.addTo(lrmap);
-    self.current = { options, layer, migrationLayer, lrmap };
+    self.current = { options, layer, migrationLayer, lrmap, direction: 'in' };
     setReady(true);
   }, []);
 
@@ -86,9 +85,11 @@ export default () => {
   const hide = () => migrationLayer.hide();
 
   const changeDirection = () => {
-    lrmap.removeLayer(layer);
-    const newOptions = Object.assign(options, { direction: 'in' });
-    self.current.migrationLayer = L.migrationLayer(inData, newOptions);
+    lrmap.removeLayer(self.current.layer);
+    const { direction } = self.current;
+    const newData = direction === 'in' ? inData : data;
+    self.current.direction = direction === 'in' ? 'out':'in';
+    self.current.migrationLayer = L.migrationLayer(newData, options);
     self.current.layer = self.current.migrationLayer.addTo(lrmap);
   };
 

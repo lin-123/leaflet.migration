@@ -6,15 +6,9 @@ import Line from './Line';
 import Pulse from './Pulse';
 import Spark from './Spark';
 import { extend } from './utils';
-import { STYLE } from './config';
 import Popover from './popover';
 import { Context } from './store';
-
-const mergeStyle = (style) => {
-  if (!style) return STYLE;
-
-  return { ...STYLE, ...style };
-};
+import { LatLngTuple } from 'leaflet';
 
 class Migration {
   ctx: Context = new Context()
@@ -69,6 +63,9 @@ class Migration {
       popover,
     } = this;
     const radiusScale = linearScale(dataRange, [minRadius, maxRadius || 2 * minRadius]);
+
+    // 缓存位置信息， 相同位置的就只初始化一份就行
+    const pulsePosi: Set<string> = new Set();
     data.forEach((item, index) => {
       // console.log('item',item);
       const { from, to, labels, color } = item;
@@ -83,25 +80,29 @@ class Migration {
         color,
       });
 
-      const radius = radiusScale(item.value);
       // 计算每一个圆环的大小
-      let pulseOption = {
-        x: to[0],
-        y: to[1],
-        dataRange,
-        radius,
-        maxRadius,
-        container,
-        index,
-        data: item,
-        popover,
-      };
-      if (direction === 'in') {
-        pulseOption = Object.assign(pulseOption, { x: from[0], y: from[1] });
+      const radius = radiusScale(item.value);
+      const genPulse = (latlng: LatLngTuple) => {
+        const posi = latlng.join('_');
+        if (pulsePosi.has(posi)) return;
+        pulsePosi.add(posi);
+        const pulse = new Pulse({
+          x: latlng[0],
+          y: latlng[1],
+          dataRange,
+          radius,
+          maxRadius,
+          container,
+          index,
+          data: item,
+          popover,
+        });
+        this.store.pulses.push(pulse);
       }
-      // 圆环脉冲
-      const pulse = new Pulse(pulseOption);
+      genPulse(from);
+      genPulse(to);
 
+      // 扫尾
       const spark = new Spark({
         startX: from[0],
         startY: from[1],
@@ -116,7 +117,6 @@ class Migration {
       });
 
       this.store.arcs.push(arc);
-      this.store.pulses.push(pulse);
       this.store.sparks.push(spark);
 
       this.index = 0;

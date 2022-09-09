@@ -80,7 +80,6 @@ class Spark extends Arc {
 
     context.save();
     context.translate(this.centerX, this.centerY);
-    debugger;
     this.marker.x = Math.cos(this.trailAngle) * this.radius;
     this.marker.y = Math.sin(this.trailAngle) * this.radius;
     this.marker.angle = this.trailAngle;
