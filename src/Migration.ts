@@ -9,9 +9,10 @@ import { extend } from './utils';
 import Popover from './popover';
 import { Context } from './store';
 import { LatLngTuple } from 'leaflet';
+import { DataItem } from './typings/base';
 
 class Migration {
-  ctx: Context = new Context()
+  ctx: Context
   started: boolean = false
   playAnimation: boolean = true
   store: any = {
@@ -20,6 +21,11 @@ class Migration {
     sparks: [],
   }
   popover: Popover
+
+  // 顺序播放的时候记录下标
+  index: number = 0
+
+  requestAnimationId: number = 0
 
   // options = { map, canvas, data, options, container }
   constructor({ ctx }: { ctx: Context }) {
@@ -40,13 +46,12 @@ class Migration {
    */
   refresh() {
     const {
-      data, container, options: {
+      data, options: {
         marker: {
           radius: [minRadius, maxRadius],
           textVisible: label
         },
         line: {
-          direction,
           width: arcWidth,
           icon
         }
@@ -58,7 +63,7 @@ class Migration {
     }
     this.clear();
 
-    const dataRange = extend(data, (i) => i.value);
+    const dataRange = extend(data, (i: any) => i.value);
     const {
       popover,
     } = this;
@@ -66,7 +71,7 @@ class Migration {
 
     // 缓存位置信息， 相同位置的就只初始化一份就行
     const pulsePosi: Set<string> = new Set();
-    data.forEach((item, index) => {
+    data.forEach((item: DataItem, index) => {
       // console.log('item',item);
       const { from, to, labels, color } = item;
       const arc = new Line({
@@ -89,13 +94,13 @@ class Migration {
         const pulse = new Pulse({
           x: latlng[0],
           y: latlng[1],
-          dataRange,
+          // dataRange,
           radius,
-          maxRadius,
-          container,
+          // maxRadius,
           index,
           data: item,
           popover,
+          ctx: this.ctx
         });
         this.store.pulses.push(pulse);
       }
@@ -112,7 +117,6 @@ class Migration {
         // style: this.ctx.options.line,
         width: minRadius,
         color,
-        direction,
         marker: icon.type
       });
 
@@ -126,7 +130,7 @@ class Migration {
   }
 
   clear() {
-    this.store.pulses.forEach((pulse) => pulse.clear());
+    this.store.pulses.forEach((pulse: Pulse) => pulse.clear());
     this.store = {
       arcs: [],
       pulses: [],
@@ -157,7 +161,7 @@ class Migration {
       this.draw(store.pulses);
       const drawFrame = () => {
         this.requestAnimationId = window.requestAnimationFrame(drawFrame);
-        if (this.playAnimation) {
+        if (this.playAnimation && context) {
           context.clearRect(0, 0, width, height);
           Object.keys(store).forEach((key) => {
             const shapes = store[key];
@@ -174,7 +178,7 @@ class Migration {
                 }
               }
             } else {
-              shapes.forEach((shap) => shap.draw(context));
+              shapes.forEach((shap: any) => shap.draw(context));
             }
           });
         }

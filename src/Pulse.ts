@@ -1,67 +1,75 @@
 // 脉冲， label 圆环扩散
-import store from './store';
+import Popover from './popover';
+import { Context } from './store';
+import { DataItem } from './typings/base';
 
-const domCache = [];
+const domCache: HTMLDivElement[] = [];
+
+export interface PulseProps {
+  x: number
+  y: number
+  data: DataItem
+  index: number
+  popover: Popover
+  radius: number
+  ctx: Context
+}
 
 class Pulse {
-  constructor({
-    x,
-    y,
-    container,
-    data,
-    index,
-    popover,
-    // user config radius
-    radius,
-  }) {
-    const { color, value, labels } = data;
-    const r = radius;
-    // 根据用户设置的 radius, data[x].value, zoom 来决定半径
-    Object.assign(this, {
-      x,
-      y,
-      color,
-      container,
-      value,
-      labels,
-      r,
-      scale: 1,
-    });
+  options: PulseProps
+  scale: number = 1
+  pulse: HTMLDivElement
+  ring: HTMLDivElement
 
-    this.showPopover = (e) => {
-      const { top, left } = store.mapPosi;
-      const { clientX, clientY } = e;
-      popover.show(clientX - left, clientY - top, data, index);
-    };
-    this.hidePopover = () => popover.hide(data, index);
+  static domCache: HTMLDivElement[] = []
+
+  constructor(props: PulseProps) {
+    // const { color, value, labels } = data;
+    // const r = radius;
+    // 根据用户设置的 radius, data[x].value, zoom 来决定半径
+    this.options = props;
     this.initDom();
   }
 
+  showPopover = (e: MouseEvent) => {
+    const { clientX, clientY } = e;
+    const { data, index, popover, ctx } = this.options;
+    const { top, left } = ctx.mapPosi;
+      popover.show(clientX - left, clientY - top, data, index);
+  }
+
+  hidePopover= () => {
+    const { data, index, popover } = this.options;
+    popover.hide(data, index);
+  }
+
   clear() {
-    domCache.push(this.pulse);
-    this.pulse.removeEventListener('mouseover', this.showPopover);
-    this.pulse.removeEventListener('mouseout', this.hidePopover);
-    this.container.removeChild(this.pulse);
+    const { pulse } = this;
+    domCache.push(pulse);
+    pulse.removeEventListener('mouseover', this.showPopover);
+    pulse.removeEventListener('mouseout', this.hidePopover);
+    this.options.ctx.container.removeChild(pulse);
   }
 
   initDom() {
     if (domCache.length > 0) {
       this.pulse = domCache.pop();
-      [this.ring] = this.pulse.children;
+      this.ring = this.pulse.children[0];
     } else {
       this.pulse = document.createElement('div');
       this.ring = document.createElement('div');
       this.pulse.appendChild(this.ring);
     }
-    const { x, y, r, color, pulse, ring } = this;
+    const { x, y, radius, data: { color } } = this.options;
+    const { pulse, ring } = this;
     Object.assign(pulse.style, {
       position: 'absolute',
       zIndex: '1',
       borderRadius: '50%',
-      width: `${2 * r}px`,
-      height: `${2 * r}px`,
-      left: `-${r}px`,
-      top: `-${r}px`,
+      width: `${2 * radius}px`,
+      height: `${2 * radius}px`,
+      left: `-${radius}px`,
+      top: `-${radius}px`,
       background: color,
       // boxShadow: `0 0 10px ${color}`,
       transform: `translate(${x}px, ${y}px)`,
@@ -70,16 +78,16 @@ class Pulse {
     Object.assign(ring.style, {
       position: 'absolute',
       borderRadius: '50%',
-      width: `${2 * r}px`,
-      height: `${2 * r}px`,
+      width: `${2 * radius}px`,
+      height: `${2 * radius}px`,
       left: `${-1}px`,
       top: `${-1}px`,
       border: `1px solid ${color}`,
     });
-    this.container.appendChild(pulse);
+    this.options.ctx.container.appendChild(pulse);
 
-    this.pulse.addEventListener('mouseover', this.showPopover);
-    this.pulse.addEventListener('mouseout', this.hidePopover);
+    pulse.addEventListener('mouseover', this.showPopover);
+    pulse.addEventListener('mouseout', this.hidePopover);
   }
 
   draw() {

@@ -6,26 +6,36 @@ import L, { LatLngTuple, Map } from "leaflet";
 import { DEFAULT_OPTION } from "./config";
 import { Data, Options } from "./typings/base";
 
+export interface ContextProps {
+  container: HTMLDivElement
+  canvas: HTMLCanvasElement
+  data: Data
+  options: Options
+}
+
 // export interface ContextProps
 export class Context {
   options: Options = DEFAULT_OPTION
   data: Data = []
-  map: Map
-  container?: HTMLDivElement
-  canvas?: HTMLCanvasElement
-  canvasCtx?: CanvasRenderingContext2D | null
+  map?: Map
+  container: HTMLDivElement
+  canvas: HTMLCanvasElement
+  canvasCtx: CanvasRenderingContext2D | null
+  mapPosi: DOMRect
 
-  setCanvas(canvas: HTMLCanvasElement) {
+  constructor({
+    container, canvas, data, options
+  }: ContextProps) {
+    this.container = container;
     this.canvas = canvas;
     this.canvasCtx = canvas.getContext('2d');
-  }
-
-  init({ container, canvas, map, options, data }: any) {
-    Object.assign(this, {
-      container, map, data,
-    });
-    this.setCanvas(canvas);
+    this.data = data;
     this.setOptions(options);
+
+    this.mapPosi = this.container.getBoundingClientRect();
+    window.addEventListener('scroll', () => {
+      this.mapPosi = this.container.getBoundingClientRect();
+    });
   }
 
   setOptions(options: Options) {
@@ -39,8 +49,9 @@ export class Context {
 
   _convertData(data: Data): Data {
     const { map } = this;
+    if (!map || !Array.isArray(data)) return [];
     const bounds = map.getBounds();
-    if (data && Array.isArray(data) && data.length > 0 && bounds) {
+    if (bounds) {
       const getLatLng = ([lng, lat]: LatLngTuple) => {
         const { x, y } = map.latLngToContainerPoint(new L.LatLng(lat, lng));
         return [x, y];
@@ -56,21 +67,3 @@ export class Context {
     return [];
   }
 }
-
-class Store {
-  init({ container }) {
-    // map container
-    this.container = container;
-    // this.mapPosi = container.container.getBoundingClientRect();
-    this.setMapPosi();
-    window.addEventListener('scroll', () => {
-      this.setMapPosi();
-    });
-  }
-
-  setMapPosi() {
-    this.mapPosi = this.container.getBoundingClientRect();
-  }
-}
-
-export default new Store();

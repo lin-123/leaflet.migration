@@ -1,21 +1,21 @@
 import Arc from './Arc';
 
 class Line extends Arc {
-  constructor(options) {
+  font: string
+  label: string
+  labels: [string, string]
+  constructor(options: any) {
     super(options);
-    const { labels, font, label } = options;
-    Object.assign(this, {
-      font,
-      label,
-      labels,
-    });
+    this.font = options.font;
+    this.label = options.label;
+    this.labels = options.labels;
   }
 
-  draw(context) {
+  draw(context: CanvasRenderingContext2D): void {
     Object.assign(context, {
       lineWidth: this.lineWidth,
       strokeStyle: this.color,
-      fillStyle: this.strokeStyle,
+      // fillStyle: this.strokeStyle,
     });
 
     context.beginPath();
