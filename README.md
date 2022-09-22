@@ -28,22 +28,38 @@ const data = [
     value: '',
   },
 ];
+const popover = document.querySelector('.popover');
 const options = {
-  minRadius: 3,
-  maxRadius: 3,
-  arcWidth: 0.001,
-  label: true,
-  order: true,
-  replacePopover: function (x, y, data, index) {
+  marker: {
+    // 最小半径、最大半径
+    radius: [5, 10],
+    // 是否显示波纹动销
+    pulse: true,
+    textVisible: true
+  },
+  // 飞线
+  line: {
+    // 飞线宽度
+    width: 1,
+    // 是否按顺序走飞线
+    order: false,
+    icon: {
+      type: 'arrow',
+      imgUrl: '',
+      size: 20
+    },
+  },
+  // marker: 'https://github.githubassets.com/favicons/favicon.png',
+  replacePopover(x, y, data, index) {
     console.log(x, y, data, index, 'show popover');
     popover.innerHTML =
       'value:' + data.value + '\nfrom:' + data.labels[1] + '\nto:' + data.labels[0];
     return popover;
   },
-  onShowPopover: function (x, y, data, index) {
+  onShowPopover(x, y, data, index) {
     console.log(x, y, data, index, 'show popover');
   },
-  onHidePopover: function (index) {
+  onHidePopover(index) {
     console.log('hide popover', index);
   },
 };
