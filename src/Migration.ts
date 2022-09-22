@@ -117,7 +117,7 @@ class Migration {
         // style: this.ctx.options.line,
         width: minRadius,
         color,
-        marker: icon.type
+        marker: icon
       });
 
       this.store.arcs.push(arc);

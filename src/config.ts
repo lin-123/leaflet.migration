@@ -38,4 +38,3 @@ export const DEFAULT_OPTION = {
 
 export const POPOVER_OFFSET = 12;
 
-export const MARKER_SIZE = 20;

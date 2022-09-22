@@ -40,9 +40,9 @@ export default () => {
         // 是否按顺序走飞线
         order: false,
         icon: {
-          type: 'arrow',
+          type: 'circle',
           imgUrl: '',
-          size: 20
+          size: 10
         },
       },
       // marker: 'https://github.githubassets.com/favicons/favicon.png',

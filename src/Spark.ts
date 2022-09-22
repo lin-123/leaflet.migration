@@ -33,8 +33,7 @@ class Spark extends Arc {
       angle: (50 * Math.PI) / 180,
       style: options.marker,
       color: 'rgb(255, 255, 255)',
-      size: 10,
-      borderWidth: 0,
+      borderWidth: 1,
       borderColor: this.color,
     });
   }

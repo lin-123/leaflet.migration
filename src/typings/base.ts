@@ -1,15 +1,17 @@
 import { LatLngTuple } from "leaflet"
 
+export interface LineIcon {
+  type: IconType,
+  imgUrl: string,
+  size: number
+}
+
 export interface LineOption {
   // 飞线宽度
   width: number,
   // 是否按顺序走飞线
   order: boolean,
-  icon: {
-    type: IconType,
-    imgUrl: string,
-    size: number
-  },
+  icon: LineIcon,
 }
 export interface MarkerOption {
   // 最小半径、最大半径

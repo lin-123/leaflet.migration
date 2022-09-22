@@ -1,9 +1,8 @@
-import { MARKER_SIZE } from "./config";
+import { IconType, LineIcon } from "./typings/base";
 
 export interface MarkerProps {
-  style: string
+  style: LineIcon
   color: string
-  size: number
   borderWidth: number
   borderColor: string
 }
@@ -21,17 +20,18 @@ class Marker {
     this.options = options;
 
     const { style } = options;
-    if (/http/.test(style)) {
+    if (style.type === IconType.img) {
       const img = document.createElement('img');
       img.src = style;
-      img.width = MARKER_SIZE;
-      img.height = MARKER_SIZE;
+      img.width = style.size;
+      img.height = style.size;
       this.img = img;
     }
   }
 
   draw(context: CanvasRenderingContext2D, position: Position) {
-    const { borderWidth, borderColor, color, style, size } = this.options;
+    const { borderWidth, borderColor, color, style } = this.options;
+    const size = style.size / 2;
     const { x, y, angle } = position;
     context.translate(x, y);
     Object.assign(context, {
@@ -44,16 +44,16 @@ class Marker {
     context.beginPath();
     context.rotate(angle + Math.PI);
 
-    if (style === 'circle') {
+    if (style.type === IconType.circle) {
       context.arc(0, 0, size, 0, Math.PI * 2, false);
-    } else if (style === 'arrow') {
+    } else if (style.type === IconType.arrow) {
       context.moveTo(size, size);
       context.lineTo(0, -size);
       context.lineTo(-size, size);
       context.lineTo(0, size / 4);
       context.lineTo(size, size);
 
-    } else if (/http/.test(style) && this.img) {
+    } else if (style.type === IconType.img && this.img) {
       const { width, height } = this.img;
       context.drawImage(this.img, -width/2, -height, width, height);
     }
