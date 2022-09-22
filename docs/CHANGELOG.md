@@ -5,12 +5,15 @@ order: 2
 # 更新日志
 
 ## TODO
-- [ ] 整理 api， 扩展 marker/line/style 等
-  - [] 切换成 ts
-  - [x] demo 调通
 
 - [ ] 渲染性能优化， 可以支持上万个点同时运动
+
   - 提前把各个扫尾的点的下一个位置计算好， 然后调用 canvas redraw
+
+- [x] 整理 api， 扩展 marker/line/style 等
+
+  - [x] 切换成 ts
+  - [x] demo 调通
 
 - [x] 飞线支持 marker 支持 圆、箭头、自定义图片
 
