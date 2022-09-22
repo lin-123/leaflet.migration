@@ -3,7 +3,19 @@ import { FACTOR } from './config';
 import { getDistance } from './utils';
 
 class Arc {
-  constructor(options) {
+  startX: number
+  startY: number
+  endX: number
+  endY: number
+  centerX: number
+  centerY: number
+  startAngle: number
+  endAngle: number
+  radius: number
+  color: string
+  lineWidth: number = 1
+
+  constructor(options: any) {
     const { startX, startY, endX, endY, width, color = '#fff' } = options;
 
     // 两点之间的圆有多个，通过两点及半径便可以定出两个圆，根据需要选取其中一个圆
@@ -18,22 +30,20 @@ class Arc {
     const startAngle = Math.atan2(startY - centerY, startX - centerX);
     const endAngle = Math.atan2(endY - centerY, endX - centerX);
 
-    Object.assign(this, {
-      startX,
-      startY,
-      endX,
-      endY,
-      centerX,
-      centerY,
-      startAngle,
-      endAngle,
-      radius,
-      color,
-      lineWidth: width || 1,
-    });
+    this.startX = startX;
+    this.startY = startY;
+    this.endX = endX;
+    this.endY = endY;
+    this.centerX = centerX;
+    this.centerY = centerY;
+    this.startAngle = startAngle;
+    this.endAngle = endAngle;
+    this.radius = radius;
+    this.color = color;
+    this.lineWidth = width || 1;
   }
 
-  draw() {}
+  draw(context: CanvasRenderingContext2D): void {}
 }
 
 export default Arc;

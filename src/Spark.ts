@@ -1,9 +1,18 @@
 // 飞线， 根据曲线的路径飞行
 import Arc from './Arc';
 import Marker from './Marker';
+import { Direction } from './typings/base';
 
 class Spark extends Arc {
-  constructor(options) {
+  factor: number
+  deltaAngle: number
+  trailAngle: number
+  arcAngle: number
+  tailPointsCount: number
+  animateBlur?: boolean
+  marker: Marker
+
+  constructor(options: any) {
     super(options);
     this.tailPointsCount = 10; // 拖尾点数
     // 飞线速度
@@ -21,16 +30,16 @@ class Spark extends Arc {
     this.marker = new Marker({
       x: 50,
       y: 80,
-      rotation: (50 * Math.PI) / 180,
-      style: 'circle',
+      angle: (50 * Math.PI) / 180,
+      style: options.marker,
       color: 'rgb(255, 255, 255)',
-      size: 3,
+      size: 10,
       borderWidth: 0,
       borderColor: this.color,
     });
   }
 
-  drawArc(context, strokeColor, lineWidth, startAngle, endAngle) {
+  drawArc(context: CanvasRenderingContext2D, strokeColor: String, lineWidth: number, startAngle: number, endAngle: number) {
     Object.assign(context, {
       lineWidth,
       strokeStyle: strokeColor,
@@ -42,7 +51,7 @@ class Spark extends Arc {
     context.stroke();
   }
 
-  draw(context, order) {
+  draw(context: CanvasRenderingContext2D, order?: Direction): void {
     const { endAngle, trailAngle, factor, color, deltaAngle } = this;
     // 匀速
     const angle = trailAngle + factor;
@@ -80,9 +89,11 @@ class Spark extends Arc {
 
     context.save();
     context.translate(this.centerX, this.centerY);
-    this.marker.x = Math.cos(this.trailAngle) * this.radius;
-    this.marker.y = Math.sin(this.trailAngle) * this.radius;
-    this.marker.draw(context);
+    this.marker.draw(context, {
+      x: Math.cos(this.trailAngle) * this.radius,
+      y: Math.sin(this.trailAngle) * this.radius,
+      angle: this.trailAngle,
+    });
     context.restore();
 
     if (!order && ((endAngle - this.trailAngle) * 180) / Math.PI < 0.5) {

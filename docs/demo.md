@@ -9,10 +9,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.migration';
-import { data, inData } from './demo';
+import { data, inData, randomDataByLen } from './demo';
 
 export default () => {
-  const [ready, setReady] = useState(false);
+  const [clork, setClork] = useState(0);
   const self = useRef({});
 
   useEffect(() => {
@@ -26,11 +26,26 @@ export default () => {
 
     const popover = document.querySelector('.popover');
     const options = {
-      minRadius: 5,
-      maxRadius: 10,
-      arcWidth: 0.1,
-      label: true,
-      order: false,
+      marker: {
+        // 最小半径、最大半径
+        radius: [5, 10],
+        // 是否显示波纹动销
+        pulse: true,
+        textVisible: true
+      },
+      // 飞线
+      line: {
+        // 飞线宽度
+        width: 1,
+        // 是否按顺序走飞线
+        order: false,
+        icon: {
+          type: 'arrow',
+          imgUrl: '',
+          size: 20
+        },
+      },
+      // marker: 'https://github.githubassets.com/favicons/favicon.png',
       replacePopover(x, y, data, index) {
         console.log(x, y, data, index, 'show popover');
         popover.innerHTML =
@@ -45,44 +60,51 @@ export default () => {
       },
     };
     const migrationLayer = L.migrationLayer(
-      data.map((i) => Object.assign(i, {})),
+      data,
       options,
     );
+
     const layer = migrationLayer.addTo(lrmap);
-    self.current = { options, layer, migrationLayer, lrmap };
-    setReady(true);
+    self.current = { options, layer, migrationLayer, lrmap, direction: 'in' };
+    setClork(clork + 1);
   }, []);
 
   const { options, migrationLayer, layer, lrmap } = self.current;
 
   const rendomData = () => {
-    const newData = data.map((item) => {
-      return {
-        ...item,
-        value: parseInt(Math.random() * 100),
-      };
-    });
-    self.current.migrationLayer.setData(newData);
+    self.current.migrationLayer.setData(randomDataByLen(Math.floor(30 * Math.random())));
   };
   const rendomStyle = () => {
-    options.pulseRadius = Math.random() * 20;
-    options.arcWidth = Math.random() * 5;
+    options.marker.radius[1] = Math.random() * 20;
+    options.line.width = Math.random() * 5;
     self.current.migrationLayer.setStyle(options);
   };
-  const add = () => migrationLayer.addTo(lrmap);
-  const remove = () => lrmap.removeLayer(layer);
+
+  const add = () => {
+    if (migrationLayer && layer) return alert('图层已存在，请勿重复添加');
+    const newData = randomDataByLen(10);
+    self.current.migrationLayer = L.migrationLayer(newData, options);
+    self.current.layer = self.current.migrationLayer.addTo(lrmap);
+    setClork(clork + 1)
+  }
+  const remove = () => {
+    lrmap.removeLayer(layer);
+    delete self.current.migrationLayer;
+    delete self.current.layer;
+    setClork(clork + 1)
+  }
   const show = () => migrationLayer.show();
   const hide = () => migrationLayer.hide();
 
   const changeDirection = () => {
-    lrmap.removeLayer(layer);
-    const newOptions = Object.assign(options, { direction: 'in' });
-    self.current.migrationLayer = L.migrationLayer(inData, newOptions);
-    self.current.layer = self.current.migrationLayer.addTo(lrmap);
+    const { direction } = self.current;
+    const newData = direction === 'in' ? inData : data;
+    self.current.direction = direction === 'in' ? 'out':'in';
+    self.current.migrationLayer.setData(newData);
   };
 
   return (
-    <div class="box">
+    <div>
       <div id="map1" style={{ height: 600 }}></div>
       <div className="control">
         <button onClick={rendomData}>rendomData</button>

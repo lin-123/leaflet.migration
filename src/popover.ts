@@ -1,10 +1,18 @@
 import { getType } from './utils';
 import { POPOVER_OFFSET } from './config';
+import L from 'leaflet';
+import { Context } from './store';
 
 class Popover {
-  constructor({ onShowPopover, onHidePopover, container, replacePopover }) {
+  replace?: Function
+  onShow?: Function
+  onHide?: Function
+  el: HTMLDivElement
+  context: HTMLDivElement;
+
+  constructor(ctx: Context) {
     // wrapper
-    this.el = L.DomUtil.create('div', '', container);
+    this.el = L.DomUtil.create('div', '', ctx.container);
     Object.assign(this.el.style, {
       position: 'absolute',
       left: '0',
@@ -13,6 +21,7 @@ class Popover {
       zIndex: '11',
     });
     this.context = L.DomUtil.create('div', '', this.el);
+    const { replacePopover, onShowPopover, onHidePopover } = ctx.options;
     if (getType(replacePopover) === 'Function') {
       this.replace = replacePopover;
     } else {
@@ -23,13 +32,11 @@ class Popover {
         padding: '8px 16px',
       });
     }
-    Object.assign(this, {
-      onShow: onShowPopover,
-      onHide: onHidePopover,
-    });
+    this.onShow = onShowPopover;
+    this.onHide = onHidePopover;
   }
 
-  show(x, y, data, idx) {
+  show(x: number, y: number, data, idx) {
     const { value, labels } = data;
     const { el, replace, onShow } = this;
     if (replace) {
@@ -39,7 +46,7 @@ class Popover {
     } else {
       this.context.innerText = `${labels[0]} -> ${labels[1]}: ${value}`;
     }
-    if (getType(onShow) === 'Function') onShow(data, idx);
+    if (onShow && getType(onShow) === 'Function') onShow(data, idx);
 
     Object.assign(el.style, {
       display: '',
@@ -49,7 +56,7 @@ class Popover {
 
   hide(data, idx) {
     const { el, onHide } = this;
-    if (getType(onHide) === 'Function') onHide(data, idx);
+    if (onHide && getType(onHide) === 'Function') onHide(data, idx);
     el.style.display = 'none';
   }
 }

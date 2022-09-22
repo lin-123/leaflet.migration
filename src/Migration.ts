@@ -1,72 +1,77 @@
+/**
+ * 核心类
+ */
 import linearScale from 'uc-fun/lib/linearScale';
 import Line from './Line';
 import Pulse from './Pulse';
 import Spark from './Spark';
 import { extend } from './utils';
-import { STYLE } from './config';
 import Popover from './popover';
-
-const mergeStyle = (style) => {
-  if (!style) return STYLE;
-
-  return { ...STYLE, ...style };
-};
+import { Context } from './store';
+import { LatLngTuple } from 'leaflet';
+import { DataItem } from './typings/base';
 
 class Migration {
+  ctx: Context
+  started: boolean = false
+  playAnimation: boolean = true
+  store: any = {
+    arcs: [],
+    pulses: [],
+    sparks: [],
+  }
+  popover: Popover
+
+  // 顺序播放的时候记录下标
+  index: number = 0
+
+  requestAnimationId: number = 0
+
   // options = { map, canvas, data, options, container }
-  constructor({ options, container, ...otherOptions }) {
-    const { replacePopover, onShowPopover, onHidePopover, direction, order, ...style } = options;
-    Object.assign(this, {
-      ...otherOptions,
-      direction,
-      container,
-      order: order || false,
-      style: mergeStyle(style),
-      playAnimation: true,
-      started: false,
-      store: {
-        arcs: [],
-        pulses: [],
-        sparks: [],
-      },
-    });
-    this.popover = new Popover({
-      replacePopover,
-      onShowPopover,
-      onHidePopover,
-      container,
-    });
-    this.context = this.canvas.getContext('2d');
-  }
-
-  setStyle(style) {
-    this.style = mergeStyle(style);
-    this.refresh();
-  }
-
-  setData(data) {
-    this.data = data;
-    this.refresh();
+  constructor({ ctx }: { ctx: Context }) {
+    this.ctx = ctx;
+    // const { replacePopover, onShowPopover, onHidePopover, ...options } = ctx;
+    // Object.assign(this, {
+    //   ...otherOptions,
+    //   direction,
+    //   container,
+    //   order: order || false,
+    //   style: mergeStyle(style),
+    // });
+    this.popover = new Popover(ctx);
   }
 
   /*
    * 更新数据
    */
   refresh() {
-    const { data, direction } = this;
+    const {
+      data, options: {
+        marker: {
+          radius: [minRadius, maxRadius],
+          textVisible: label
+        },
+        line: {
+          width: arcWidth,
+          icon
+        }
+      }
+    } = this.ctx;
+
     if (!data || data.length === 0) {
       return;
     }
     this.clear();
 
-    const dataRange = extend(data, (i) => i.value);
+    const dataRange = extend(data, (i: any) => i.value);
     const {
       popover,
-      container,
-      style: { arcWidth, minRadius, label, maxRadius },
     } = this;
     const radiusScale = linearScale(dataRange, [minRadius, maxRadius || 2 * minRadius]);
-    data.forEach((item, index) => {
+
+    // 缓存位置信息， 相同位置的就只初始化一份就行
+    const pulsePosi: Set<string> = new Set();
+    data.forEach((item: DataItem, index) => {
       // console.log('item',item);
       const { from, to, labels, color } = item;
       const arc = new Line({
@@ -79,37 +84,43 @@ class Migration {
         width: arcWidth,
         color,
       });
-      // const zoom = this.map.getZoom();
-      const radius = radiusScale(item.value);
+
       // 计算每一个圆环的大小
-      let pulseOption = {
-        x: to[0],
-        y: to[1],
-        dataRange,
-        radius,
-        maxRadius,
-        container,
-        index,
-        data: item,
-        popover,
-      };
-      if (direction === 'in') {
-        pulseOption = Object.assign(pulseOption, { x: from[0], y: from[1] });
+      const radius = radiusScale(item.value);
+      const genPulse = (latlng: LatLngTuple) => {
+        const posi = latlng.join('_');
+        if (pulsePosi.has(posi)) return;
+        pulsePosi.add(posi);
+        const pulse = new Pulse({
+          x: latlng[0],
+          y: latlng[1],
+          // dataRange,
+          radius,
+          // maxRadius,
+          index,
+          data: item,
+          popover,
+          ctx: this.ctx
+        });
+        this.store.pulses.push(pulse);
       }
-      // 圆环脉冲
-      const pulse = new Pulse(pulseOption);
+      genPulse(from);
+      genPulse(to);
+
+      // 扫尾
       const spark = new Spark({
         startX: from[0],
         startY: from[1],
         endX: to[0],
         endY: to[1],
+
+        // style: this.ctx.options.line,
         width: minRadius,
         color,
-        direction,
+        marker: icon.type
       });
 
       this.store.arcs.push(arc);
-      this.store.pulses.push(pulse);
       this.store.sparks.push(spark);
 
       this.index = 0;
@@ -119,7 +130,7 @@ class Migration {
   }
 
   clear() {
-    this.store.pulses.forEach((pulse) => pulse.clear());
+    this.store.pulses.forEach((pulse: Pulse) => pulse.clear());
     this.store = {
       arcs: [],
       pulses: [],
@@ -132,11 +143,11 @@ class Migration {
     window.cancelAnimationFrame(this.requestAnimationId);
   }
 
-  draw(shapes) {
-    const { context } = this;
-    shapes.forEach((shap) => shap.draw(context));
+  draw(shapes: any) {
+    const { canvasCtx } = this.ctx;
+    shapes.forEach((shap: any) => shap.draw(canvasCtx));
     for (let i = 0, len = shapes.length; i < len; i++) {
-      shapes[i].draw(context);
+      shapes[i].draw(canvasCtx);
     }
   }
 
@@ -144,18 +155,17 @@ class Migration {
     const {
       started,
       store,
-      context,
-      canvas: { width, height },
-      order,
     } = this;
+    const { canvasCtx: context, canvas: { width, height }, options: { line: { order }} } = this.ctx;
     if (!started) {
       this.draw(store.pulses);
       const drawFrame = () => {
         this.requestAnimationId = window.requestAnimationFrame(drawFrame);
-        if (this.playAnimation) {
+        if (this.playAnimation && context) {
           context.clearRect(0, 0, width, height);
           Object.keys(store).forEach((key) => {
             const shapes = store[key];
+
             if (order && key === 'sparks') {
               const item = shapes[this.index];
               item.draw(context, order);
@@ -168,7 +178,7 @@ class Migration {
                 }
               }
             } else {
-              shapes.forEach((shap) => shap.draw(context));
+              shapes.forEach((shap: any) => shap.draw(context));
             }
           });
         }
