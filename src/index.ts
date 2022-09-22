@@ -66,7 +66,6 @@ class MigrationLayer extends L.Layer {
   }
   hide() {
     this.ctx.container.style.display = 'none';
-    debugger;
     return this;
   }
   show() {
