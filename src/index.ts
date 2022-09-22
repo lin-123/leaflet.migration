@@ -10,23 +10,24 @@ class MigrationLayer extends L.Layer {
   migration: Migration
   options: Options
   data: Data
-  ctx: Context
+  ctx?: Context
 
   constructor(_data: Data, options: Options) {
     super();
-    const container = L.DomUtil.create('div', 'leaflet-ODLayer-container');
-    const canvas = document.createElement('canvas');
-    container.appendChild(canvas);
-    Object.assign(this, { _show: true });
-
-    this.ctx = new Context({ container, canvas, data: _data, options });
     this.data = _data;
     this.options = options;
   }
 
   onAdd(map: Map) {
     const { x, y } = map.getSize();
-    const { container } = this.ctx;
+    const container = L.DomUtil.create('div', 'leaflet-ODLayer-container');
+    const canvas = document.createElement('canvas');
+    container.appendChild(canvas);
+    Object.assign(this, { _show: true });
+
+    const { data, options } = this;
+    this.ctx = new Context({ container, canvas, data, options, map });
+
     Object.assign(container.style, {
       position: 'absolute',
       width: `${x}px`,
@@ -35,7 +36,6 @@ class MigrationLayer extends L.Layer {
     map.getPanes().overlayPane.appendChild(container);
 
     this.ctx.map = map;
-    this.ctx.setData(this.data);
     this.migration = new Migration({
       ctx: this.ctx
     });
@@ -66,6 +66,7 @@ class MigrationLayer extends L.Layer {
   }
   hide() {
     this.ctx.container.style.display = 'none';
+    debugger;
     return this;
   }
   show() {
@@ -119,7 +120,6 @@ class MigrationLayer extends L.Layer {
     const bounds = this.ctx.map.getBounds();
     if (bounds && this.migration.playAnimation) {
       this._resize();
-      this.ctx.setData(this.data);
       this.migration.refresh();
     }
   }

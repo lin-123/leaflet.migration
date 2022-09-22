@@ -10,7 +10,8 @@ export interface ContextProps {
   container: HTMLDivElement
   canvas: HTMLCanvasElement
   data: Data
-  options: Options
+  options: Options,
+  map: Map
 }
 
 // export interface ContextProps
@@ -24,12 +25,13 @@ export class Context {
   mapPosi: DOMRect
 
   constructor({
-    container, canvas, data, options
+    container, canvas, data, options, map
   }: ContextProps) {
     this.container = container;
     this.canvas = canvas;
     this.canvasCtx = canvas.getContext('2d');
-    this.data = data;
+    this.map = map;
+    this.data = this._convertData(data);
     this.setOptions(options);
 
     this.mapPosi = this.container.getBoundingClientRect();
