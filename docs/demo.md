@@ -12,7 +12,7 @@ import 'leaflet.migration';
 import { data, inData, randomDataByLen } from './demo';
 
 export default () => {
-  const [ready, setReady] = useState(false);
+  const [clork, setClork] = useState(0);
   const self = useRef({});
 
   useEffect(() => {
@@ -66,7 +66,7 @@ export default () => {
 
     const layer = migrationLayer.addTo(lrmap);
     self.current = { options, layer, migrationLayer, lrmap, direction: 'in' };
-    setReady(true);
+    setClork(clork + 1);
   }, []);
 
   const { options, migrationLayer, layer, lrmap } = self.current;
@@ -79,18 +79,28 @@ export default () => {
     options.line.width = Math.random() * 5;
     self.current.migrationLayer.setStyle(options);
   };
-  const add = () => migrationLayer.addTo(lrmap);
-  const remove = () => lrmap.removeLayer(layer);
+
+  const add = () => {
+    if (migrationLayer && layer) return alert('图层已存在，请勿重复添加');
+    const newData = randomDataByLen(10);
+    self.current.migrationLayer = L.migrationLayer(newData, options);
+    self.current.layer = self.current.migrationLayer.addTo(lrmap);
+    setClork(clork + 1)
+  }
+  const remove = () => {
+    lrmap.removeLayer(layer);
+    delete self.current.migrationLayer;
+    delete self.current.layer;
+    setClork(clork + 1)
+  }
   const show = () => migrationLayer.show();
   const hide = () => migrationLayer.hide();
 
   const changeDirection = () => {
-    lrmap.removeLayer(self.current.layer);
     const { direction } = self.current;
     const newData = direction === 'in' ? inData : data;
     self.current.direction = direction === 'in' ? 'out':'in';
-    self.current.migrationLayer = L.migrationLayer(newData, options);
-    self.current.layer = self.current.migrationLayer.addTo(lrmap);
+    self.current.migrationLayer.setData(newData);
   };
 
   return (
