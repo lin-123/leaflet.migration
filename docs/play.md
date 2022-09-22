@@ -1,3 +1,6 @@
+---
+hide: true
+---
 # canvas verify
 
 ```jsx
