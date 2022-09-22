@@ -10,6 +10,7 @@ order: 2
 
   - 提前把各个扫尾的点的下一个位置计算好， 然后调用 canvas redraw
 
+### 2.3.0
 - [x] 整理 api， 扩展 marker/line/style 等
 
   - [x] 切换成 ts
