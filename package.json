@@ -1,6 +1,7 @@
 {
   "name": "leaflet.migration",
-  "version": "2.3.1",
+  "version": "2.3.3",
+  "description": "leaflet plugin that provides migration lines layer.",
   "scripts": {
     "start": "dumi dev",
     "docs:build": "dumi build",
@@ -55,5 +56,12 @@
     "lint-staged": "^10.0.7",
     "prettier": "^2.2.1",
     "yorkie": "^2.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lin-123/leaflet.migration"
+  },
+  "bugs": {
+    "url": "https://github.com/lin-123/leaflet.migration/issues"
   }
 }

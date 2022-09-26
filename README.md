@@ -122,9 +122,3 @@ Methods inherited from [L.Layer](https://leafletjs.com/reference-1.5.0.html#laye
 | --------------------- | ------- | -------------------------------------------------- |
 | onAdd(`<Map> map`)    | this    | called on L.migrationLayer(data, style).addTo(map) |
 | onRemove(`<Map> map`) | this    | called on map.remove(migrationLayer)               |
-
-## Development
-
-- npm start
-- web server will listen on 8000
-- open http://localhost:8000
