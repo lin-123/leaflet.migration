@@ -30,14 +30,6 @@ class Migration {
   // options = { map, canvas, data, options, container }
   constructor({ ctx }: { ctx: Context }) {
     this.ctx = ctx;
-    // const { replacePopover, onShowPopover, onHidePopover, ...options } = ctx;
-    // Object.assign(this, {
-    //   ...otherOptions,
-    //   direction,
-    //   container,
-    //   order: order || false,
-    //   style: mergeStyle(style),
-    // });
     this.popover = new Popover(ctx);
   }
 

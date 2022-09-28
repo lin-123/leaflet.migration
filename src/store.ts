@@ -18,7 +18,7 @@ export interface ContextProps {
 export class Context {
   options: Options = DEFAULT_OPTION
   data: Data = []
-  map?: Map
+  map: Map
   container: HTMLDivElement
   canvas: HTMLCanvasElement
   canvasCtx: CanvasRenderingContext2D | null
@@ -49,6 +49,7 @@ export class Context {
     this.data = this._convertData(data);
   }
 
+  // convert latlng to xy
   _convertData(data: Data): Data {
     const { map } = this;
     if (!map || !Array.isArray(data)) return [];

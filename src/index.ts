@@ -48,30 +48,34 @@ class MigrationLayer extends L.Layer {
   onRemove(map: Map) {
     this.mapHandles.forEach(({ type, handle }: any) => map.off(type, handle));
     this.mapHandles = [];
-    L.DomUtil.remove(this.ctx.container);
+    this.ctx && L.DomUtil.remove(this.ctx.container);
     this.migration.clear();
     return this;
   }
 
   setData(data: Data) {
-    this.ctx.setData(data);
+    this.ctx?.setData(data);
     this.migration.refresh();
     // this._draw();
     return this;
   }
   setStyle(style: Options) {
-    this.ctx.setOptions(style);
+    this.ctx?.setOptions(style);
     this.migration.refresh();
     return this;
   }
-  hide() {
-    this.ctx.container.style.display = 'none';
+
+  private setVisible(visible: boolean) {
+    if (!this.ctx) return this;
+    this.ctx.container.style.display = visible ? '' : 'none';
+    this._show = visible;
     return this;
   }
+  hide() {
+    return this.setVisible(false);
+  }
   show() {
-    this.ctx.container.style.display = '';
-    this._show = true;
-    return this;
+    this.setVisible(true);
   }
   play() {
     this.migration.play();
@@ -96,19 +100,20 @@ class MigrationLayer extends L.Layer {
       this.migration.play();
       this._draw();
     }
-    const { map } = this.ctx;
+    if (!this.ctx) return;
+    const { map, container } = this.ctx;
     map.on('moveend', moveendHandle);
     mapHandles.push({ type: 'moveend', handle: moveendHandle });
 
     const zoomstartHandle = () => {
-      this.ctx.container.style.display = 'none';
+      container.style.display = 'none';
     }
     map.on('zoomstart ', zoomstartHandle);
     mapHandles.push({ type: 'zoomstart', handle: zoomstartHandle });
 
     const zoomendHandle = () => {
       if (this._show) {
-        this.ctx.container.style.display = '';
+        container.style.display = '';
         this._draw();
       }
     }
@@ -116,14 +121,18 @@ class MigrationLayer extends L.Layer {
     mapHandles.push({ type: 'zoomend', handle: zoomendHandle });
   }
   _draw() {
-    const bounds = this.ctx.map.getBounds();
+    const bounds = this.ctx?.map.getBounds();
     if (bounds && this.migration.playAnimation) {
       this._resize();
+      this.ctx?.setData(this.data);
       this.migration.refresh();
     }
   }
 
+  // reset container size and position
   _resize() {
+    if (!this.ctx) return;
+
     const { map, canvas, container } = this.ctx;
     const bounds = map.getBounds();
     const topleft = bounds.getNorthWest();
