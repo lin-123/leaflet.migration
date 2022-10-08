@@ -24,10 +24,6 @@ class MigrationLayer extends L.Layer {
     const canvas = document.createElement('canvas');
     container.appendChild(canvas);
     Object.assign(this, { _show: true });
-
-    const { data, options } = this;
-    this.ctx = new Context({ container, canvas, data, options, map });
-
     Object.assign(container.style, {
       position: 'absolute',
       width: `${x}px`,
@@ -35,6 +31,8 @@ class MigrationLayer extends L.Layer {
     });
     map.getPanes().overlayPane.appendChild(container);
 
+    const { data, options } = this;
+    this.ctx = new Context({ container, canvas, data, options, map });
     this.ctx.map = map;
     this.migration = new Migration({
       ctx: this.ctx

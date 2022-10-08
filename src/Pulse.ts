@@ -35,7 +35,7 @@ class Pulse {
     const { clientX, clientY } = e;
     const { data, index, popover, ctx } = this.options;
     const { top, left } = ctx.mapPosi;
-      popover.show(clientX - left, clientY - top, data, index);
+    popover.show(clientX - left, clientY - top, data, index);
   }
 
   hidePopover= () => {
