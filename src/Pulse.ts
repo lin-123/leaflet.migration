@@ -1,4 +1,5 @@
 // 脉冲， label 圆环扩散
+// 动效用 css 实现
 import Popover from './popover';
 import { Context } from './store';
 import { DataItem } from './typings/base';
@@ -84,22 +85,21 @@ class Pulse {
       top: `${-1}px`,
       border: `1px solid ${color}`,
     });
+    ring.animate([
+      { transform: 'scale(1)' },
+      { transform: 'scale(2)' },
+      // { transform: 'scale(1)' }
+    ], {
+      duration: 1000,
+      iterations: Infinity
+    })
     this.options.ctx.container.appendChild(pulse);
 
     pulse.addEventListener('mouseover', this.showPopover);
     pulse.addEventListener('mouseout', this.hidePopover);
   }
 
-  draw() {
-    const { scale } = this;
-    Object.assign(this.ring.style, {
-      transform: `scale(${scale})`,
-    });
-    this.scale += 0.02;
-    if (scale > 2) {
-      this.scale = 1;
-    }
-  }
+  draw() {}
 }
 
 export default Pulse;
