@@ -2,13 +2,10 @@
 order: 2
 ---
 
-# 更新日志
+# CHANGELOG
 
-## TODO
-
-- [ ] 渲染性能优化， 可以支持上万个点同时运动
-
-  - 提前把各个扫尾的点的下一个位置计算好， 然后调用 canvas redraw
+## 2.3.5
+- [x] performance optimization: support 3k points movement at the same time
 
 ### 2.3.5
 - fixbug: correct popover position

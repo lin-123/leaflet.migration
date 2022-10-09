@@ -1,26 +1,33 @@
-import Arc from './Arc';
+import Arc, { ArcProps } from './Arc';
 
-class Line extends Arc {
-  font: string
-  label: string
+export interface LineProps extends ArcProps {
+  font?: string
+  label: boolean
   labels: [string, string]
-  constructor(options: any) {
+  canvasCtx: CanvasRenderingContext2D | null
+}
+class Line extends Arc {
+  font?: string
+  label: boolean
+  // labels for [start, end]
+  labels: [string, string]
+  constructor(options: LineProps) {
     super(options);
     this.font = options.font;
     this.label = options.label;
     this.labels = options.labels;
+    this.draw(options.canvasCtx);
   }
 
-  draw(context: CanvasRenderingContext2D): void {
+  draw(context: CanvasRenderingContext2D | null): void {
+    if (!context) return;
     Object.assign(context, {
       lineWidth: this.lineWidth,
       strokeStyle: this.color,
       // fillStyle: this.strokeStyle,
     });
 
-    context.beginPath();
     context.arc(this.centerX, this.centerY, this.radius, this.startAngle, this.endAngle, false);
-    context.stroke();
 
     if (this.label) {
       const [startLabel, endLabel] = this.labels;

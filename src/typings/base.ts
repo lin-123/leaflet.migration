@@ -49,8 +49,10 @@ export enum IconType {
 export interface DataItem {
   // rgb, #xxxxxx
   color: string,
-  from: LatLngTuple,
-  to: LatLngTuple,
+  from: [number, number]
+  to: [number, number]
+  // from: LatLngTuple,
+  // to: LatLngTuple,
   labels: [string, string],
   value: number,
 }
