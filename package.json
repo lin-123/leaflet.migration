@@ -1,6 +1,6 @@
 {
   "name": "leaflet.migration",
-  "version": "2.3.7",
+  "version": "2.3.8",
   "description": "leaflet plugin that provides migration lines layer.",
   "scripts": {
     "start": "dumi dev",
@@ -35,7 +35,6 @@
     "@types/leaflet": "^1.7.11",
     "leaflet": "^1.8.0",
     "lodash": "^4.17.21",
-    "react": "^18.0.0",
     "uc-fun": "^0.4.3"
   },
   "devDependencies": {
@@ -55,6 +54,7 @@
     "gh-pages": "^3.0.0",
     "lint-staged": "^10.0.7",
     "prettier": "^2.2.1",
+    "react": "^18.2.0",
     "yorkie": "^2.0.0"
   },
   "repository": {

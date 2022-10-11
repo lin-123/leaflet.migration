@@ -20,7 +20,7 @@ specifiers:
   lint-staged: ^10.0.7
   lodash: ^4.17.21
   prettier: ^2.2.1
-  react: ^18.0.0
+  react: ^18.2.0
   uc-fun: ^0.4.3
   yorkie: ^2.0.0
 
@@ -28,7 +28,6 @@ dependencies:
   '@types/leaflet': 1.7.11
   leaflet: 1.8.0
   lodash: 4.17.21
-  react: 18.2.0
   uc-fun: 0.4.3
 
 devDependencies:
@@ -48,6 +47,7 @@ devDependencies:
   gh-pages: 3.2.3
   lint-staged: 10.5.4
   prettier: 2.7.1
+  react: 18.2.0
   yorkie: 2.0.0
 
 packages:
@@ -8738,6 +8738,7 @@ packages:
 
   /js-tokens/4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
+    dev: true
 
   /js-yaml/3.14.1:
     resolution: {integrity: sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g==}
@@ -9118,6 +9119,7 @@ packages:
     hasBin: true
     dependencies:
       js-tokens: 4.0.0
+    dev: true
 
   /lowercase-keys/1.0.1:
     resolution: {integrity: sha512-G2Lj61tXDnVFFOi8VZds+SoQjtQC3dgokKdDG2mTm1tx4m50NUHBOZSBwQQHyy0V12A0JTG4icfZQH+xPyh8VA==}
@@ -11809,7 +11811,7 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       loose-envify: 1.4.0
-    dev: false
+    dev: true
 
   /read-pkg-up/7.0.1:
     resolution: {integrity: sha512-zK0TB7Xd6JpCLmlLmufqykGE+/TlOePD6qKClNW7hHDKFh/J7/7gCWGR7joEQEW1bKq3a3yUZSObOoWLFQ4ohg==}
