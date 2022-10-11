@@ -19,7 +19,7 @@ export const DEFAULT_OPTION = {
     radius: [5, 10],
     // 是否显示波纹动销
     pulse: true,
-    textVisible: true
+    textVisible: false
   },
   // 飞线
   line: {
@@ -28,7 +28,7 @@ export const DEFAULT_OPTION = {
     // 是否按顺序走飞线
     order: true,
     icon: {
-      type: IconType.arrow,
+      type: IconType.circle,
       imgUrl: '',
       size: 20
     },

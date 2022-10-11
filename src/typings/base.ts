@@ -1,5 +1,12 @@
 import { LatLngTuple } from "leaflet"
 
+
+export enum IconType {
+  circle = 'circle',
+  arrow = 'arrow',
+  img = 'img'
+}
+
 export interface LineIcon {
   type: IconType,
   imgUrl: string,
@@ -38,12 +45,6 @@ export interface Options {
 export enum Direction {
   in = 'in',
   out = 'out'
-}
-
-export enum IconType {
-  circle = 'circle',
-  arrow = 'arrow',
-  img = 'img'
 }
 
 export interface DataItem {
