@@ -3,6 +3,8 @@ order: 2
 ---
 
 # CHANGELOG
+## 2.3.7
+- update api document
 
 ## 2.3.6
 - [x] performance optimization: support 3k points movement at the same time
