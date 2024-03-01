@@ -41,8 +41,12 @@ class Popover {
     const { el, replace, onShow } = this;
     if (replace) {
       const popover = replace(x, y, data, idx);
-      // el.appendChild(popover);
-      el.replaceChild(popover, el.children[0]);
+      if (typeof popover === 'string') {
+        this.context.innerText = popover;
+      } else {
+        // el.appendChild(popover);
+        el.replaceChild(popover, el.children[0]);
+      }
     } else {
       this.context.innerText = `${labels[0]} -> ${labels[1]}: ${value}`;
     }

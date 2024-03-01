@@ -1,6 +1,7 @@
 // 批量模拟数据
-const randomNum = (start, end) => Math.floor(start + (end - start) * Math.random());
-export const genData = (length, interator) => {
+const randomNum = (start: number, end: number) => Math.floor(start + (end - start) * Math.random());
+
+export const genData = (length: number, interator) => {
   return Array.from({ length }, (i, idx) => {
     return interator({
       color: 'rgb(101, 169, 249)',
